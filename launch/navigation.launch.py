@@ -38,7 +38,7 @@ def launch_setup(context: LaunchContext,
     namespace = namespace_arg.perform(context)
     param_dir = param_file_arg.perform(context)
     
-    robots = ["mpo_700", "mp_400", "mp_500", "mpo_500"]
+    robots = ["mpo_700", "mp_400", "mp_500", "mpo_500", "mmo_700"]
 
     # Reading the selected robot from robot_name.txt
     with open('robot_name.txt', 'r') as file:
