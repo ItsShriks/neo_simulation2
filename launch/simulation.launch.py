@@ -176,7 +176,7 @@ def launch_setup(context: LaunchContext, my_neo_robot_arg, my_neo_env_arg, robot
         package='teleop_twist_keyboard',
         executable="teleop_twist_keyboard",
         output='screen',
-        prefix = 'xterm -e',
+        # prefix = 'xterm -e',
         name='teleop'
     )
 
