@@ -97,10 +97,18 @@ def launch_setup(context: LaunchContext, my_neo_robot_arg, my_neo_env_arg, robot
 
     # Setting the world and starting the Gazebo
     # Adding /opt/ros/humble/share to GAZEBO_MODEL_PATH to fix model:// URI delays
+    # Adding /opt/ros/humble/share and workspace install/share to GAZEBO_MODEL_PATH 
+    pkg_share_path = os.path.join(get_package_prefix('neo_simulation2'), 'share')
+    workspace_install_share = os.path.join(os.getcwd(), 'install', 'share')
+    
+    robotiq_share = os.path.join(os.getcwd(), 'install', 'robotiq_description', 'share')
+    
     if 'GAZEBO_MODEL_PATH' in os.environ:
-        os.environ['GAZEBO_MODEL_PATH'] += os.pathsep + '/opt/ros/humble/share'
+        os.environ['GAZEBO_MODEL_PATH'] += os.pathsep + '/opt/ros/humble/share' + os.pathsep + workspace_install_share + os.pathsep + robotiq_share
     else:
-        os.environ['GAZEBO_MODEL_PATH'] =  '/opt/ros/humble/share'
+        os.environ['GAZEBO_MODEL_PATH'] =  '/opt/ros/humble/share' + os.pathsep + workspace_install_share + os.pathsep + robotiq_share
+    
+    print(f"[DEBUG] GAZEBO_MODEL_PATH set to: {os.environ['GAZEBO_MODEL_PATH']}")
 
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -191,7 +199,8 @@ def launch_setup(context: LaunchContext, my_neo_robot_arg, my_neo_env_arg, robot
         executable='rviz2',
         name='rviz2',
         output='screen',
-        arguments=['-d', rviz_config]
+        arguments=['-d', rviz_config],
+        parameters=[{'use_sim_time': use_sim_time}]
     )
 
     joint_state_broadcaster_spawner = Node(
