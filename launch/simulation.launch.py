@@ -162,7 +162,8 @@ def launch_setup(context: LaunchContext, my_neo_robot_arg, my_neo_env_arg, robot
         arguments=[
             os.path.join(get_package_prefix('gazebo_ros'), 'lib', 'gazebo_ros', 'spawn_entity.py'),
             '-entity', my_neo_robot,
-            '-topic', '/robot_description'
+            '-topic', '/robot_description',
+            '-timeout', '300.0'
         ],
         output='screen'
     )

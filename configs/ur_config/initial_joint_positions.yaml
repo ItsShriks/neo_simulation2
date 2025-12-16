@@ -1,6 +1,6 @@
-shoulder_pan_joint: 1.5
-shoulder_lift_joint: -2.5
-elbow_joint: 2.0
-wrist_1_joint: 0.0
-wrist_2_joint: -1.5
-wrist_3_joint: 0.0
+shoulder_pan_joint: 0.0        # Point arm forward
+shoulder_lift_joint: -1.8      # Lift shoulder up
+elbow_joint: 1.5               # Bend elbow moderately
+wrist_1_joint: -1.2            # Tilt wrist down
+wrist_2_joint: 0.0             # Rotate gripper to face forward (same as pan_tilt)
+wrist_3_joint: 1.57           # Rotate camera -90 degrees
