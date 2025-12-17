@@ -17,7 +17,7 @@
     <joint name="pan_tilt_tower_joint" type="fixed">
       <parent link="${parent_link}"/>
       <child link="pan_tilt_tower_base"/>
-      <origin xyz="-0.2 0 1.214" rpy="0 0 0" />
+      <origin xyz="-0.15 0 1.1" rpy="0 0 0" />
     </joint>
     
     <!-- Tower vertical support pole -->
@@ -42,9 +42,7 @@
 
     <!-- Include Dynamixel pan-tilt mechanism -->
     <xacro:include filename="$(find neo_simulation2)/components/dynamixel/steve_pan_tilt.xacro"/>
-    <xacro:steve_pan_tilt parent="pan_tilt_tower_base" name="pan_tilt">
-      <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
-    </xacro:steve_pan_tilt>
+    <xacro:steve_pan_tilt parent="pan_tilt_tower_base" name="pan_tilt"/>
 
     <!-- ROS2 Control for Pan-Tilt -->
     <xacro:include filename="$(find neo_simulation2)/components/pan_tilt/pan_tilt.ros2_control.xacro"/>
