@@ -59,8 +59,8 @@
                 </gazebo>
             </xacro:if>
 
-            <!-- include robotiq gripper-->
-            <xacro:include filename="$(find neo_simulation2)/components/arm/robotiq_gripper.urdf.xacro"/>
+            <!-- include wrist camera mount (dummy end-effector with camera) -->
+            <xacro:include filename="$(find neo_simulation2)/components/arm/wrist_camera_mount.urdf.xacro"/>
 
 </robot>
 

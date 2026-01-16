@@ -67,11 +67,12 @@
             <xacro:include filename="$(find neo_simulation2)/components/arm/elite_arm.urdf.xacro"/>
         </xacro:if>
         
-        <!-- Wrist camera on arm end-effector (only if arm is present) -->
-        <xacro:if value="$(arg include_wrist_camera)">
+        
+        <!-- Wrist camera is now integrated into ur_arm assembly (with dummy end-effector) -->
+        <!-- <xacro:if value="$(arg include_wrist_camera)">
             <xacro:include filename="$(find neo_simulation2)/components/cameras/wrist_d405.urdf.xacro"/>
             <xacro:wrist_d405 parent="ur5etool0" use_gazebo="$(arg use_gazebo)"/>
-        </xacro:if>
+        </xacro:if> -->
     </xacro:if>
     
     <!-- Optional depth camera on base -->
