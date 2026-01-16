@@ -4,7 +4,6 @@
     <!-- Include macros from common components -->
     <xacro:include filename="$(find neo_simulation2)/components/common_macro/gazebo_lidar_macro.xacro" />
     <xacro:include filename="$(find neo_simulation2)/components/common_macro/gazebo_object_controller_macro.xacro" />
-    <xacro:include filename="$(find neo_simulation2)/robots/mpo_700/urdf/macro/gazebo_mpo_700_wheel_macro.xacro" />
 
     <!-- Properties -->
     <xacro:property name="lidar_1_update_rate" value="40" />
@@ -53,19 +52,31 @@
         visualize="false"
     />
 
-    <!--Wheels - Only define Gazebo properties for drive wheels-->
-    <xacro:gazebo_mpo_700_wheel
-        wheel_prefix="mpo_700_wheel_front_left" 
-    />
-    <xacro:gazebo_mpo_700_wheel
-        wheel_prefix="mpo_700_wheel_front_right" 
-    />
-    <xacro:gazebo_mpo_700_wheel
-        wheel_prefix="mpo_700_wheel_back_left" 
-    />
-    <xacro:gazebo_mpo_700_wheel
-        wheel_prefix="mpo_700_wheel_back_right" 
-    />
+    <!--Wheels - Gazebo friction properties-->
+    <gazebo reference="mpo_700_wheel_front_left_link">
+      <mu1>0.05</mu1>
+      <mu2>0.05</mu2>
+      <kp>100000.0</kp>
+      <kd>10.0</kd>
+    </gazebo>
+    <gazebo reference="mpo_700_wheel_front_right_link">
+      <mu1>0.05</mu1>
+      <mu2>0.05</mu2>
+      <kp>100000.0</kp>
+      <kd>10.0</kd>
+    </gazebo>
+    <gazebo reference="mpo_700_wheel_back_left_link">
+      <mu1>0.05</mu1>
+      <mu2>0.05</mu2>
+      <kp>100000.0</kp>
+      <kd>10.0</kd>
+    </gazebo>
+    <gazebo reference="mpo_700_wheel_back_right_link">
+      <mu1>0.05</mu1>
+      <mu2>0.05</mu2>
+      <kp>100000.0</kp>
+      <kd>10.0</kd>
+    </gazebo>
 
 </robot>
 
