@@ -7,14 +7,16 @@
             <xacro:include filename="$(find robotiq_description)/urdf/ur_to_robotiq_adapter.urdf.xacro"/>
             <xacro:ur_to_robotiq 
                 prefix="" 
-                parent_link="${tf_prefix}tool0" 
-                child="gripper_mount_link"
+                connected_to="${tf_prefix}tool0" 
                 rotation="${pi/2}"
                 />
 
             <xacro:include filename="$(find robotiq_description)/urdf/robotiq_2f_85_macro.urdf.xacro"/>
-            <xacro:robotiq_gripper name="robotiq_gripper" prefix="" parent_link="gripper_mount_link" use_fake_hardware="true">
+            <xacro:robotiq_gripper 
+                name="robotiq_gripper" 
+                prefix="" 
+                parent_link="gripper_mount_link" 
+                use_fake_hardware="true">
                 <origin xyz="0 0 0" rpy="0 0 -${pi / 2}"/>
             </xacro:robotiq_gripper>
-
 </robot>
