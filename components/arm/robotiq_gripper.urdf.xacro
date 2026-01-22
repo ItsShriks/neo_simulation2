@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="robotiq_gripper">
-            
+    
     <xacro:arg name="tf_prefix" default="ur5e"/>
     <xacro:property name="tf_prefix" value="$(arg tf_prefix)"/>
     
@@ -15,6 +15,7 @@
     <xacro:robotiq_gripper 
         name="robotiq_gripper" 
         prefix="" 
+        parent="gripper_mount_link" 
         use_fake_hardware="true">
         <origin xyz="0 0 0" rpy="0 0 -${pi / 2}"/>
     </xacro:robotiq_gripper>
