@@ -1,22 +1,22 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="robotiq_gripper">
             
-            <xacro:arg name="tf_prefix" default="ur5e"/>
-            <xacro:property name="tf_prefix" value="$(arg tf_prefix)"/>
-            
-            <xacro:include filename="$(find robotiq_description)/urdf/ur_to_robotiq_adapter.urdf.xacro"/>
-            <xacro:ur_to_robotiq 
-                prefix="" 
-                connected_to="${tf_prefix}tool0" 
-                rotation="${pi/2}"
-                />
+    <xacro:arg name="tf_prefix" default="ur5e"/>
+    <xacro:property name="tf_prefix" value="$(arg tf_prefix)"/>
+    
+    <xacro:include filename="$(find robotiq_description)/urdf/ur_to_robotiq_adapter.urdf.xacro"/>
+    <xacro:ur_to_robotiq 
+        prefix="" 
+        connected_to="${tf_prefix}tool0" 
+        rotation="${pi/2}"
+    />
 
-            <xacro:include filename="$(find robotiq_description)/urdf/robotiq_2f_85_macro.urdf.xacro"/>
-            <xacro:robotiq_gripper 
-                name="robotiq_gripper" 
-                prefix="" 
-                parent_link="gripper_mount_link" 
-                use_fake_hardware="true">
-                <origin xyz="0 0 0" rpy="0 0 -${pi / 2}"/>
-            </xacro:robotiq_gripper>
+    <xacro:include filename="$(find robotiq_description)/urdf/robotiq_2f_85_macro.urdf.xacro"/>
+    <xacro:robotiq_gripper 
+        name="robotiq_gripper" 
+        prefix="" 
+        use_fake_hardware="true">
+        <origin xyz="0 0 0" rpy="0 0 -${pi / 2}"/>
+    </xacro:robotiq_gripper>
+
 </robot>
