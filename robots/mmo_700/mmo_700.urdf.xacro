@@ -12,7 +12,7 @@
     <xacro:arg name="arm_type" default="ur5e"/>
 
     <!-- Arm tool type: ability_hand or robotiq_gripper; none otherwise -->
-    <xacro:arg name="arm_tool" default="robotiq_gripper"/>
+    <xacro:arg name="arm_tool" default="none"/>
 
     <!-- Wrist camera type: d405_angled, d405_straight; none otherwise -->
     <xacro:arg name="wrist_camera" default=""/>
