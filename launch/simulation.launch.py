@@ -5,8 +5,7 @@ import launch
 from ament_index_python.packages import get_package_share_directory, get_package_prefix
 from launch import LaunchDescription, LaunchContext
 from launch.actions import (DeclareLaunchArgument, IncludeLaunchDescription,
-                            OpaqueFunction, RegisterEventHandler)
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, OpaqueFunction
+                            OpaqueFunction, RegisterEventHandler, TimerAction)
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
@@ -35,7 +34,7 @@ You can launch this file using the following terminal commands:
 
 # OpaqueFunction is used to perform setup actions during launch through a Python function
 def launch_setup(context: LaunchContext, my_neo_robot_arg, my_neo_env_arg, robot_arm_arg, docking_adapter_arg, 
-                 include_wrist_camera_arg, include_depth_camera_arg, include_pan_tilt_arg):
+                 include_wrist_camera_arg, include_depth_camera_arg, include_pan_tilt_arg, enable_teleop_arg):
     # Create a list to hold all the nodes
     launch_actions = []
     # The perform method of a LaunchConfiguration is called to evaluate its value.
@@ -47,6 +46,7 @@ def launch_setup(context: LaunchContext, my_neo_robot_arg, my_neo_env_arg, robot
     include_depth_camera = include_depth_camera_arg.perform(context)
 
     include_pan_tilt = include_pan_tilt_arg.perform(context)
+    enable_teleop = enable_teleop_arg.perform(context)
     use_sim_time = True
     
     print("\n" + "="*70)
@@ -95,18 +95,22 @@ def launch_setup(context: LaunchContext, my_neo_robot_arg, my_neo_env_arg, robot
         print(f"[INFO] Using custom world file: {world_path}")
     print(f"[INFO] World path: {world_path}")
 
+
     # Setting the world and starting the Gazebo
-    # Adding /opt/ros/humble/share to GAZEBO_MODEL_PATH to fix model:// URI delays
-    # Adding /opt/ros/humble/share and workspace install/share to GAZEBO_MODEL_PATH 
     pkg_share_path = os.path.join(get_package_prefix('neo_simulation2'), 'share')
     workspace_install_share = os.path.join(os.getcwd(), 'install', 'share')
     
     robotiq_share = os.path.join(os.getcwd(), 'install', 'robotiq_description', 'share')
     
+    # Build GAZEBO_MODEL_PATH with only necessary directories
+    model_paths = [workspace_install_share]
+    if os.path.exists(robotiq_share):
+        model_paths.append(robotiq_share)
+    
     if 'GAZEBO_MODEL_PATH' in os.environ:
-        os.environ['GAZEBO_MODEL_PATH'] += os.pathsep + '/opt/ros/humble/share' + os.pathsep + workspace_install_share + os.pathsep + robotiq_share
+        os.environ['GAZEBO_MODEL_PATH'] += os.pathsep + os.pathsep.join(model_paths)
     else:
-        os.environ['GAZEBO_MODEL_PATH'] =  '/opt/ros/humble/share' + os.pathsep + workspace_install_share + os.pathsep + robotiq_share
+        os.environ['GAZEBO_MODEL_PATH'] = os.pathsep.join(model_paths)
     
     print(f"[DEBUG] GAZEBO_MODEL_PATH set to: {os.environ['GAZEBO_MODEL_PATH']}")
 
@@ -153,7 +157,6 @@ def launch_setup(context: LaunchContext, my_neo_robot_arg, my_neo_env_arg, robot
         ).toxml()
     print("[INFO] URDF processing complete")
 
-    # Spawning the robot
     # Spawning the robot
     # Using /usr/bin/python3 explicitly to avoid Anaconda conflicts
     spawn_entity = Node(
@@ -238,15 +241,27 @@ def launch_setup(context: LaunchContext, my_neo_robot_arg, my_neo_env_arg, robot
     print("\n[INFO] Launching nodes...")
     print("[INFO] - Robot State Publisher")
     launch_actions.append(start_robot_state_publisher_cmd)
+    
+    # Collect controller spawners to delay them
+    controller_spawners = []
     if robot_arm_type != '':
-        print("[INFO] - Joint State Broadcaster")
-        print("[INFO] - Joint Trajectory Controller")
-        launch_actions.append(joint_state_broadcaster_spawner)
-        launch_actions.append(initial_joint_controller_spawner_stopped)
+        print("[INFO] - Joint State Broadcaster (delayed 10s)")
+        print("[INFO] - Joint Trajectory Controller (delayed 10s)")
+        controller_spawners.append(joint_state_broadcaster_spawner)
+        controller_spawners.append(initial_joint_controller_spawner_stopped)
     
     if include_pan_tilt == 'true':
-        print("[INFO] - Pan-Tilt Controller")
-        launch_actions.append(pan_tilt_controller_spawner)
+        print("[INFO] - Pan-Tilt Controller (delayed 10s)")
+        controller_spawners.append(pan_tilt_controller_spawner)
+    
+    # Add 10-second delay to controller spawners to reduce warnings
+    # This allows gazebo_ros2_control plugin time to initialize
+    if controller_spawners:
+        delayed_controllers = TimerAction(
+            period=10.0,
+            actions=controller_spawners
+        )
+        launch_actions.append(delayed_controllers)
 
 
 
@@ -259,8 +274,12 @@ def launch_setup(context: LaunchContext, my_neo_robot_arg, my_neo_env_arg, robot
 
     print("[INFO] - RViz2 (for visualization and joint control)")
     launch_actions.append(rviz)
-    print("[INFO] - Teleop Twist Keyboard")
-    launch_actions.append(teleop)
+    
+    if enable_teleop == 'true':
+        print("[INFO] - Teleop Twist Keyboard")
+        launch_actions.append(teleop)
+    else:
+        print("[INFO] - Teleop Twist Keyboard: Disabled (use enable_teleop:=true to enable)")
     # launch_actions.append(shutdown_event)
     print("\n" + "="*70)
     print("  Launch Configuration Complete")
@@ -319,6 +338,11 @@ def generate_launch_description():
         description='Include pan-tilt camera tower'
     )
 
+    declare_enable_teleop_cmd = DeclareLaunchArgument(
+        'enable_teleop', default_value='false',
+        description='Enable teleop_twist_keyboard (requires interactive terminal, disable for Docker)'
+    )
+
 
 
     # Create launch configuration variables for the robot and map name
@@ -330,6 +354,7 @@ def generate_launch_description():
     include_depth_camera_arg = LaunchConfiguration('include_depth_camera')
 
     include_pan_tilt_arg = LaunchConfiguration('include_pan_tilt')
+    enable_teleop_arg = LaunchConfiguration('enable_teleop')
 
 
     ld.add_action(declare_my_robot_arg)
@@ -340,6 +365,7 @@ def generate_launch_description():
     ld.add_action(declare_depth_camera_cmd)
 
     ld.add_action(declare_pan_tilt_cmd)
+    ld.add_action(declare_enable_teleop_cmd)
 
 
     context_arguments = [
@@ -350,7 +376,8 @@ def generate_launch_description():
         include_wrist_camera_arg,
         include_depth_camera_arg,
 
-        include_pan_tilt_arg
+        include_pan_tilt_arg,
+        enable_teleop_arg
     ]
 
     opq_function = OpaqueFunction(

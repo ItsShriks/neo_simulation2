@@ -50,14 +50,14 @@
 
 
     <!-- Include L515 camera macro -->
-    <xacro:include filename="$(find neo_simulation2)/components/realsense/l515_simplified.urdf.xacro"/>
+    <xacro:include filename="$(find neo_simulation2)/components/cameras/l515_simplified.urdf.xacro"/>
     
-    <!-- L515 Camera mounted on tilt bracket -->
+    <!-- L515 Camera mounted on pan bracket (follows both pan and tilt) -->
     <xacro:sensor_l515_simplified 
-      parent="pan_tilt_tilt_bracket_link" 
+      parent="pan_tilt_pan_bracket_link"
       name="pan_tilt_camera"
       use_gazebo="${use_gazebo}">
-      <origin xyz="0 0.0423 -0.028" rpy="0 0 ${pi/2}"/>
+      <origin xyz="0 0.04 0" rpy="0 ${pi/2} ${pi/2}"/>
     </xacro:sensor_l515_simplified>
 
     <!-- Gazebo materials -->
