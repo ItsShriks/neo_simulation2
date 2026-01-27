@@ -41,6 +41,7 @@
         <origin xyz="0 0 0.0" rpy="${position_offset} 0 ${M_PI}"/>
         <axis xyz="${motor_direction} 0 0"/>
         <limit effort="1.5" lower="-${M_PI / 180 * 110}" upper="${M_PI / 180 * 110}" velocity="6.178465545"/>
+        <dynamics damping="0.7" friction="0.5"/>
       </joint>
     </xacro:if>
     <xacro:if value="${name != 'steve_pan_pan_tilt_motor'}">
@@ -50,6 +51,7 @@
         <origin xyz="0 0 0.0" rpy="${position_offset} 0 ${M_PI}"/>
         <axis xyz="${motor_direction} 0 0"/>
         <limit effort="1.5" lower="-${M_PI / 180 * 180}" upper="${M_PI / 180 * 20}" velocity="6.178465545"/>
+        <dynamics damping="0.7" friction="0.5"/>
       </joint>
     </xacro:if>
 
