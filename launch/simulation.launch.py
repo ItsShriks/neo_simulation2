@@ -84,7 +84,7 @@ def launch_setup(context: LaunchContext, my_neo_robot_arg, my_neo_env_arg, robot
             print(f"[INFO] Arm integration enabled: {robot_arm_type}")
 
     # Get the required paths for the world and robot robot_description_urdf
-    if (my_neo_environment == "neo_workshop" or my_neo_environment == "neo_track1"):
+    if (my_neo_environment == "neo_workshop" or my_neo_environment == "neo_track1" or my_neo_environment == "small_house"):
         world_path = os.path.join(
             get_package_share_directory('neo_simulation2'),
             'worlds',
@@ -101,11 +101,15 @@ def launch_setup(context: LaunchContext, my_neo_robot_arg, my_neo_env_arg, robot
     workspace_install_share = os.path.join(os.getcwd(), 'install', 'share')
     
     robotiq_share = os.path.join(os.getcwd(), 'install', 'robotiq_description', 'share')
+    aws_robomaker_models = os.path.join(get_package_share_directory('aws_robomaker_small_house_world'), 'models')
     
     # Build GAZEBO_MODEL_PATH with only necessary directories
     model_paths = [workspace_install_share]
     if os.path.exists(robotiq_share):
         model_paths.append(robotiq_share)
+    # Add AWS RoboMaker models for small house world
+    if os.path.exists(aws_robomaker_models):
+        model_paths.append(aws_robomaker_models)
     
     if 'GAZEBO_MODEL_PATH' in os.environ:
         os.environ['GAZEBO_MODEL_PATH'] += os.pathsep + os.pathsep.join(model_paths)
@@ -113,6 +117,12 @@ def launch_setup(context: LaunchContext, my_neo_robot_arg, my_neo_env_arg, robot
         os.environ['GAZEBO_MODEL_PATH'] = os.pathsep.join(model_paths)
     
     print(f"[DEBUG] GAZEBO_MODEL_PATH set to: {os.environ['GAZEBO_MODEL_PATH']}")
+    
+    # Set GAZEBO_RESOURCE_PATH for shader libs and rendering resources
+    if 'GAZEBO_RESOURCE_PATH' not in os.environ:
+        gazebo_resource_paths = ['/usr/share/gazebo-11', '/usr/share/gazebo']
+        os.environ['GAZEBO_RESOURCE_PATH'] = os.pathsep.join(gazebo_resource_paths)
+        print(f"[DEBUG] GAZEBO_RESOURCE_PATH set to: {os.environ['GAZEBO_RESOURCE_PATH']}")
 
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -307,7 +317,7 @@ def generate_launch_description():
     declare_world_name_arg = DeclareLaunchArgument(
         'world',
         default_value='neo_workshop',
-        description='Available worlds: "neo_track1", "neo_workshop"'
+        description='Available worlds: "neo_track1", "neo_workshop", "small_house"'
     )
 
     declare_arm_type_cmd = DeclareLaunchArgument(
