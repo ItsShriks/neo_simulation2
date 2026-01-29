@@ -101,15 +101,15 @@ def launch_setup(context: LaunchContext, my_neo_robot_arg, my_neo_env_arg, robot
     workspace_install_share = os.path.join(os.getcwd(), 'install', 'share')
     
     robotiq_share = os.path.join(os.getcwd(), 'install', 'robotiq_description', 'share')
-    aws_robomaker_models = os.path.join(get_package_share_directory('aws_robomaker_small_house_world'), 'models')
+    steve_simulation_models = os.path.join(get_package_share_directory('neo_simulation2'), 'models')
     
     # Build GAZEBO_MODEL_PATH with only necessary directories
     model_paths = [workspace_install_share]
     if os.path.exists(robotiq_share):
         model_paths.append(robotiq_share)
     # Add AWS RoboMaker models for small house world
-    if os.path.exists(aws_robomaker_models):
-        model_paths.append(aws_robomaker_models)
+    if os.path.exists(steve_simulation_models):
+        model_paths.append(steve_simulation_models)
     
     if 'GAZEBO_MODEL_PATH' in os.environ:
         os.environ['GAZEBO_MODEL_PATH'] += os.pathsep + os.pathsep.join(model_paths)
@@ -255,20 +255,20 @@ def launch_setup(context: LaunchContext, my_neo_robot_arg, my_neo_env_arg, robot
     # Collect controller spawners to delay them
     controller_spawners = []
     if robot_arm_type != '':
-        print("[INFO] - Joint State Broadcaster (delayed 10s)")
-        print("[INFO] - Joint Trajectory Controller (delayed 10s)")
+        print("[INFO] - Joint State Broadcaster (delayed 15s)")
+        print("[INFO] - Joint Trajectory Controller (delayed 15s)")
         controller_spawners.append(joint_state_broadcaster_spawner)
         controller_spawners.append(initial_joint_controller_spawner_stopped)
     
     if include_pan_tilt == 'true':
-        print("[INFO] - Pan-Tilt Controller (delayed 10s)")
+        print("[INFO] - Pan-Tilt Controller (delayed 15s)")
         controller_spawners.append(pan_tilt_controller_spawner)
     
-    # Add 10-second delay to controller spawners to reduce warnings
-    # This allows gazebo_ros2_control plugin time to initialize
+    # Add 15-second delay to controller spawners to reduce warnings and improve reliability
+    # This allows gazebo_ros2_control plugin time to initialize, especially on subsequent launches
     if controller_spawners:
         delayed_controllers = TimerAction(
-            period=10.0,
+            period=15.0,
             actions=controller_spawners
         )
         launch_actions.append(delayed_controllers)
@@ -316,7 +316,7 @@ def generate_launch_description():
     
     declare_world_name_arg = DeclareLaunchArgument(
         'world',
-        default_value='neo_workshop',
+        default_value='small_house',
         description='Available worlds: "neo_track1", "neo_workshop", "small_house"'
     )
 
