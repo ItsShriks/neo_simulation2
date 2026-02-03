@@ -85,7 +85,7 @@ def launch_setup(context: LaunchContext, my_neo_robot_arg, my_neo_env_arg, robot
             print(f"[INFO] Arm integration enabled: {robot_arm_type}")
 
     # Get the required paths for the world and robot robot_description_urdf
-    if (my_neo_environment == "neo_workshop" or my_neo_environment == "neo_track1" or my_neo_environment == "small_house"):
+    if (my_neo_environment == "neo_workshop" or my_neo_environment == "neo_track1" or my_neo_environment == "small_house" or my_neo_environment == "steve_house"):
         world_path = os.path.join(
             get_package_share_directory('neo_simulation2'),
             'worlds',

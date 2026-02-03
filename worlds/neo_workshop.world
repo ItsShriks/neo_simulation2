@@ -64,26 +64,6 @@
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
-      <model name='Construction Cone_clone'>
-        <pose frame=''>-5.09952 -0.976554 0 0 -0 6e-06</pose>
-        <scale>1 1 1</scale>
-        <link name='link'>
-          <pose frame=''>-5.09952 -0.976554 0 0 -0 6e-06</pose>
-          <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>1.7e-05 3e-05 9.94927 -0.32489 0.397088 -4.9e-05</acceleration>
-          <wrench>1.7e-05 3e-05 9.94927 0 -0 0</wrench>
-        </link>
-      </model>
-      <model name='Construction Cone_clone_clone'>
-        <pose frame=''>-3.16254 -4.5019 0 0 -0 6e-06</pose>
-        <scale>1 1 1</scale>
-        <link name='link'>
-          <pose frame=''>-3.16254 -4.5019 0 0 -0 6e-06</pose>
-          <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>1.7e-05 3e-05 9.94927 -0.32489 0.397088 -4.9e-05</acceleration>
-          <wrench>1.7e-05 3e-05 9.94927 0 -0 0</wrench>
-        </link>
-      </model>
       <model name='cafe_table'>
         <pose frame=''>-1.49239 -4.54818 0 0 -0 0</pose>
         <scale>1 1 1</scale>
@@ -721,16 +701,6 @@
         <scale>1 1 1</scale>
         <link name='link_2'>
           <pose frame=''>5.56149 2.2418 -0.000428 0.072676 0.011663 1.57159</pose>
-          <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>0 0 0 0 -0 0</acceleration>
-          <wrench>0 0 0 0 -0 0</wrench>
-        </link>
-      </model>
-      <model name='yellow_bin'>
-        <pose frame=''>1.25296 -0.82283 0 0 -0 0</pose>
-        <scale>1 1 1</scale>
-        <link name='link_2'>
-          <pose frame=''>0.952956 -1.17283 0 0 -0 0</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>
@@ -1840,65 +1810,7 @@
       </link>
       <pose frame=''>-4.66843 -4.52931 0 0 -0 0</pose>
     </model>
-    <model name='yellow_bin'>
-      <link name='link_2'>
-        <pose frame=''>-0.3 -0.35 0 0 -0 0</pose>
-        <visual name='visual'>
-          <pose frame=''>0 0 0 0 -0 0</pose>
-          <geometry>
-            <mesh>
-              <uri>model://yellow_bin/meshes/green_cylinder.stl</uri>
-              <scale>1 1 1</scale>
-            </mesh>
-          </geometry>
-          <material>
-            <lighting>1</lighting>
-            <script>
-              <uri>file://media/materials/scripts/gazebo.material</uri>
-              <name>Gazebo/Grey</name>
-            </script>
-            <ambient>0.898 0.552 0.105 1</ambient>
-            <diffuse>0.898 0.552 0.105 1</diffuse>
-            <specular>0.01 0.01 0.01 1</specular>
-            <emissive>0 0 0 1</emissive>
-            <shader type='vertex'>
-              <normal_map>__default__</normal_map>
-            </shader>
-          </material>
-          <cast_shadows>1</cast_shadows>
-          <transparency>0</transparency>
-        </visual>
-        <collision name='collision'>
-          <laser_retro>0</laser_retro>
-          <max_contacts>10</max_contacts>
-          <pose frame=''>0 0 0 0 -0 0</pose>
-          <geometry>
-            <mesh>
-              <uri>model://yellow_bin/meshes/green_cylinder.stl</uri>
-              <scale>1 1 1</scale>
-            </mesh>
-          </geometry>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <bounce/>
-            <friction>
-              <torsional>
-                <ode/>
-              </torsional>
-              <ode/>
-            </friction>
-          </surface>
-        </collision>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-      </link>
-      <static>1</static>
-      <allow_auto_disable>1</allow_auto_disable>
-      <pose frame=''>1.82698 -0.472341 0 0 -0 0</pose>
-    </model>
+    <!-- Yellow bin removed -->
     <model name='neobotix_wall_stickers'>
       <static>1</static>
       <link name='link'>
@@ -3450,7 +3362,73 @@
       </link>
       <pose frame=''>-3.98929 -0.2816 0 0 -0 1.57</pose>
     </model>
-    <model name='Construction Cone_clone'>
+    <!-- Traffic cones removed -->
+    <!-- Furniture added from small_house.world -->
+    <model name='SofaC_01_from_small_house'>
+      <static>true</static>
+      <link name='link'>
+        <pose frame=''>-3.5 -2.0 0.065992 0 0 0</pose>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <uri>model://aws_robomaker_residential_SofaC_01</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name='collision'>
+          <geometry>
+            <mesh>
+              <uri>model://aws_robomaker_residential_SofaC_01</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+      <pose frame=''>-3.5 -2.0 0.065992 0 0 0</pose>
+    </model>
+    <model name='ChairD_01_from_small_house_1'>
+      <static>true</static>
+      <link name='link'>
+        <pose frame=''>-1.5 -3.5 0 0 0 0</pose>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <uri>model://aws_robomaker_residential_ChairD_01</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name='collision'>
+          <geometry>
+            <mesh>
+              <uri>model://aws_robomaker_residential_ChairD_01</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+      <pose frame=''>-1.5 -3.5 0 0 0 0</pose>
+    </model>
+    <model name='ChairD_01_from_small_house_2'>
+      <static>true</static>
+      <link name='link'>
+        <pose frame=''>-1.5 -5.5 0 0 0 3.14159</pose>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <uri>model://aws_robomaker_residential_ChairD_01</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name='collision'>
+          <geometry>
+            <mesh>
+              <uri>model://aws_robomaker_residential_ChairD_01</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+      <pose frame=''>-1.5 -5.5 0 0 0 3.14159</pose>
+    </model>
+    <!-- End of furniture from small_house.world -->
+    <model name='nist_maze_wall_120_clone_clone_2_clone_clone_clone_2'>
       <link name='link'>
         <collision name='collision'>
           <geometry>
@@ -3493,61 +3471,6 @@
             <izz>1</izz>
           </inertia>
           <mass>1</mass>
-        </inertial>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-      </link>
-      <pose frame=''>-4.94039 -1.19168 0 0 -0 0</pose>
-    </model>
-    <model name='Construction Cone_clone_clone'>
-      <link name='link'>
-        <collision name='collision'>
-          <geometry>
-            <mesh>
-              <scale>10 10 10</scale>
-              <uri>model://construction_cone/meshes/construction_cone.dae</uri>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <bounce/>
-            <friction>
-              <torsional>
-                <ode/>
-              </torsional>
-              <ode/>
-            </friction>
-          </surface>
-        </collision>
-        <visual name='visual'>
-          <geometry>
-            <mesh>
-              <scale>10 10 10</scale>
-              <uri>model://construction_cone/meshes/construction_cone.dae</uri>
-            </mesh>
-          </geometry>
-        </visual>
-        <self_collide>0</self_collide>
-        <inertial>
-          <pose frame=''>0 0 0 0 -0 0</pose>
-          <inertia>
-            <ixx>1</ixx>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyy>1</iyy>
-            <iyz>0</iyz>
-            <izz>1</izz>
-          </inertia>
-          <mass>1</mass>
-        </inertial>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-      </link>
-      <pose frame=''>-3.16254 -4.5019 -0.00088 0 -0 0</pose>
-    </model>
     <model name='nist_maze_wall_120_clone_clone_clone_0_clone_0'>
       <static>1</static>
       <link name='nist_maze_wall_120_link'>
