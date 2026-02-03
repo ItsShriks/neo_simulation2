@@ -34,7 +34,7 @@ You can launch this file using the following terminal commands:
 
 # OpaqueFunction is used to perform setup actions during launch through a Python function
 def launch_setup(context: LaunchContext, my_neo_robot_arg, my_neo_env_arg, robot_arm_arg, docking_adapter_arg, 
-                 include_wrist_camera_arg, include_depth_camera_arg, include_pan_tilt_arg, enable_teleop_arg):
+                 include_wrist_camera_arg, include_depth_camera_arg, include_pan_tilt_arg, enable_teleop_arg, use_rviz_arg):
     # Create a list to hold all the nodes
     launch_actions = []
     # The perform method of a LaunchConfiguration is called to evaluate its value.
@@ -47,6 +47,7 @@ def launch_setup(context: LaunchContext, my_neo_robot_arg, my_neo_env_arg, robot
 
     include_pan_tilt = include_pan_tilt_arg.perform(context)
     enable_teleop = enable_teleop_arg.perform(context)
+    use_rviz = use_rviz_arg.perform(context)
     use_sim_time = True
     
     print("\n" + "="*70)
@@ -282,8 +283,11 @@ def launch_setup(context: LaunchContext, my_neo_robot_arg, my_neo_env_arg, robot
 
 
 
-    print("[INFO] - RViz2 (for visualization and joint control)")
-    launch_actions.append(rviz)
+    if use_rviz.lower() == 'true':
+        print("[INFO] - RViz2 (for visualization and joint control)")
+        launch_actions.append(rviz)
+    else:
+        print("[INFO] - RViz2: Disabled (use use_rviz:=true to enable)")
     
     if enable_teleop == 'true':
         print("[INFO] - Teleop Twist Keyboard")
@@ -297,8 +301,7 @@ def launch_setup(context: LaunchContext, my_neo_robot_arg, my_neo_env_arg, robot
     print(f"  Robot: {my_neo_robot}")
     print(f"  World: {my_neo_environment}")
     print(f"  Arm: {robot_arm_type if robot_arm_type else 'Disabled'}")
-    print(f"  Arm: {robot_arm_type if robot_arm_type else 'Disabled'}")
-    print(f"  RViz: Enabled (joint control available)")
+    print(f"  RViz: {'Enabled' if use_rviz.lower() == 'true' else 'Disabled'}")
     print(f"  Nodes: {len(launch_actions)} total")
     print("="*70 + "\n")
 
@@ -353,7 +356,10 @@ def generate_launch_description():
         description='Enable teleop_twist_keyboard (requires interactive terminal, disable for Docker)'
     )
 
-
+    declare_use_rviz_cmd = DeclareLaunchArgument(
+        'use_rviz', default_value='true',
+        description='Launch RViz for visualization'
+    )
 
     # Create launch configuration variables for the robot and map name
     my_neo_robot_arg = LaunchConfiguration('my_robot')
@@ -365,7 +371,7 @@ def generate_launch_description():
 
     include_pan_tilt_arg = LaunchConfiguration('include_pan_tilt')
     enable_teleop_arg = LaunchConfiguration('enable_teleop')
-
+    use_rviz_arg = LaunchConfiguration('use_rviz')
 
     ld.add_action(declare_my_robot_arg)
     ld.add_action(declare_world_name_arg)
@@ -376,7 +382,7 @@ def generate_launch_description():
 
     ld.add_action(declare_pan_tilt_cmd)
     ld.add_action(declare_enable_teleop_cmd)
-
+    ld.add_action(declare_use_rviz_cmd)
 
     context_arguments = [
         my_neo_robot_arg, 
@@ -385,9 +391,9 @@ def generate_launch_description():
         docking_adapter_arg,
         include_wrist_camera_arg,
         include_depth_camera_arg,
-
         include_pan_tilt_arg,
-        enable_teleop_arg
+        enable_teleop_arg,
+        use_rviz_arg
     ]
 
     opq_function = OpaqueFunction(
