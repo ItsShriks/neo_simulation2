@@ -256,20 +256,20 @@ def launch_setup(context: LaunchContext, my_neo_robot_arg, my_neo_env_arg, robot
     # Collect controller spawners to delay them
     controller_spawners = []
     if robot_arm_type != '':
-        print("[INFO] - Joint State Broadcaster (delayed 15s)")
-        print("[INFO] - Joint Trajectory Controller (delayed 15s)")
+        print("[INFO] - Joint State Broadcaster (delayed 2s)")
+        print("[INFO] - Joint Trajectory Controller (delayed 2s)")
         controller_spawners.append(joint_state_broadcaster_spawner)
         controller_spawners.append(initial_joint_controller_spawner_stopped)
     
     if include_pan_tilt == 'true':
-        print("[INFO] - Pan-Tilt Controller (delayed 15s)")
+        print("[INFO] - Pan-Tilt Controller (delayed 2s)")
         controller_spawners.append(pan_tilt_controller_spawner)
     
-    # Add 15-second delay to controller spawners to reduce warnings and improve reliability
-    # This allows gazebo_ros2_control plugin time to initialize, especially on subsequent launches
+    # Add 2-second delay to controller spawners to allow gazebo_ros2_control plugin to initialize
+    # Reduced from 15s to prevent arm from falling due to gravity before controllers activate
     if controller_spawners:
         delayed_controllers = TimerAction(
-            period=15.0,
+            period=2.0,
             actions=controller_spawners
         )
         launch_actions.append(delayed_controllers)

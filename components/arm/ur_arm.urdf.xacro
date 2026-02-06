@@ -55,6 +55,7 @@
                         <parameters>$(arg simulation_controllers)</parameters>
                         <robot_param>robot_description</robot_param>
                         <robot_param_node>robot_state_publisher</robot_param_node>
+                        <hold_joints>true</hold_joints>
                     </plugin>
                 </gazebo>
             </xacro:if>
