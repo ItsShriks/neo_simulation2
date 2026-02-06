@@ -1,4 +1,4 @@
-shoulder_pan_joint: 4.799      # 275 degrees (base rotation)
+shoulder_pan_joint: -4.799      # 275 degrees (base rotation)
 shoulder_lift_joint: -1.571    # -90 degrees (shoulder lift)
 elbow_joint: -2.705            # -155 degrees (elbow bend)
 wrist_1_joint: -0.436          # -25 degrees (wrist 1 tilt)
