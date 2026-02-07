@@ -506,16 +506,7 @@
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
-      <model name='nist_maze_wall_120_clone_clone_2_clone_clone_clone_2'>
-        <pose frame=''>-3.9861 -0.157888 0 0 -0 1.57</pose>
-        <scale>1 1 1</scale>
-        <link name='nist_maze_wall_120_link'>
-          <pose frame=''>-3.9861 -0.157888 0 0 -0 1.57</pose>
-          <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>0 0 0 0 -0 0</acceleration>
-          <wrench>0 0 0 0 -0 0</wrench>
-        </link>
-      </model>
+
       <model name='nist_maze_wall_120_clone_clone_clone'>
         <pose frame=''>4.80196 -1.41483 0 0 -0 1.57</pose>
         <scale>1 1 1</scale>
@@ -3323,157 +3314,9 @@
       </link>
       <pose frame=''>-3.99288 0.963938 0 0 -0 1.57</pose>
     </model>
-    <model name='nist_maze_wall_120_clone_clone_2_clone_clone_clone_2'>
-      <static>1</static>
-      <link name='nist_maze_wall_120_link'>
-        <pose frame=''>0 0 0 0 -0 0</pose>
-        <collision name='collision'>
-          <geometry>
-            <mesh>
-              <uri>model://nist_maze_wall_120/meshes/nist_maze_wall_120.dae</uri>
-              <scale>1 1 1</scale>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <bounce/>
-            <friction>
-              <torsional>
-                <ode/>
-              </torsional>
-              <ode/>
-            </friction>
-          </surface>
-        </collision>
-        <visual name='visual'>
-          <geometry>
-            <mesh>
-              <uri>model://nist_maze_wall_120/meshes/nist_maze_wall_120.dae</uri>
-              <scale>1 1 1</scale>
-            </mesh>
-          </geometry>
-        </visual>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-      </link>
-      <pose frame=''>-3.98929 -0.2816 0 0 -0 1.57</pose>
-    </model>
-    <!-- Traffic cones removed -->
-    <!-- Furniture added from small_house.world -->
-    <model name='SofaC_01_from_small_house'>
-      <static>true</static>
-      <link name='link'>
-        <pose frame=''>-3.5 -2.0 0.065992 0 0 0</pose>
-        <visual name='visual'>
-          <geometry>
-            <mesh>
-              <uri>model://aws_robomaker_residential_SofaC_01</uri>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name='collision'>
-          <geometry>
-            <mesh>
-              <uri>model://aws_robomaker_residential_SofaC_01</uri>
-            </mesh>
-          </geometry>
-        </collision>
-      </link>
-      <pose frame=''>-3.5 -2.0 0.065992 0 0 0</pose>
-    </model>
-    <model name='ChairD_01_from_small_house_1'>
-      <static>true</static>
-      <link name='link'>
-        <pose frame=''>-1.5 -3.5 0 0 0 0</pose>
-        <visual name='visual'>
-          <geometry>
-            <mesh>
-              <uri>model://aws_robomaker_residential_ChairD_01</uri>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name='collision'>
-          <geometry>
-            <mesh>
-              <uri>model://aws_robomaker_residential_ChairD_01</uri>
-            </mesh>
-          </geometry>
-        </collision>
-      </link>
-      <pose frame=''>-1.5 -3.5 0 0 0 0</pose>
-    </model>
-    <model name='ChairD_01_from_small_house_2'>
-      <static>true</static>
-      <link name='link'>
-        <pose frame=''>-1.5 -5.5 0 0 0 3.14159</pose>
-        <visual name='visual'>
-          <geometry>
-            <mesh>
-              <uri>model://aws_robomaker_residential_ChairD_01</uri>
-            </mesh>
-          </geometry>
-        </visual>
-        <collision name='collision'>
-          <geometry>
-            <mesh>
-              <uri>model://aws_robomaker_residential_ChairD_01</uri>
-            </mesh>
-          </geometry>
-        </collision>
-      </link>
-      <pose frame=''>-1.5 -5.5 0 0 0 3.14159</pose>
-    </model>
-    <!-- End of furniture from small_house.world -->
-    <model name='nist_maze_wall_120_clone_clone_2_clone_clone_clone_2'>
-      <link name='link'>
-        <collision name='collision'>
-          <geometry>
-            <mesh>
-              <scale>10 10 10</scale>
-              <uri>model://construction_cone/meshes/construction_cone.dae</uri>
-            </mesh>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <bounce/>
-            <friction>
-              <torsional>
-                <ode/>
-              </torsional>
-              <ode/>
-            </friction>
-          </surface>
-        </collision>
-        <visual name='visual'>
-          <geometry>
-            <mesh>
-              <scale>10 10 10</scale>
-              <uri>model://construction_cone/meshes/construction_cone.dae</uri>
-            </mesh>
-          </geometry>
-        </visual>
-        <self_collide>0</self_collide>
-        <inertial>
-          <pose frame=''>0 0 0 0 -0 0</pose>
-          <inertia>
-            <ixx>1</ixx>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyy>1</iyy>
-            <iyz>0</iyz>
-            <izz>1</izz>
-          </inertia>
-          <mass>1</mass>
-        </inertial>
-      </link>
-    </model>
+
+
+
     <model name='nist_maze_wall_120_clone_clone_clone_0_clone_0'>
       <static>1</static>
       <link name='nist_maze_wall_120_link'>

@@ -164,7 +164,7 @@ def launch_setup(
         ),
         launch_arguments={
             "world": world_path,
-            "verbose": "true",
+            "verbose": "false",
         }.items(),
     )
 
