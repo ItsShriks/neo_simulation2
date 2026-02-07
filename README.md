@@ -38,13 +38,13 @@ We have provided dedicated launch files for running SLAM and Localization with t
 #### SLAM Simulation
 This launches the simulation with the MMO-700 robot and starts SLAM Toolbox for mapping.
 ```bash
-ros2 launch steve_navigation slam_simulation.launch.py
+ros2 launch steve_navigation slam.launch.py use_sim_time:=true
 ```
 
 #### Localization Simulation
 This launches the simulation and starts AMCL for localization. You can specify a map file.
 ```bash
-ros2 launch steve_navigation localization_simulation.launch.py map:=/path/to/your/map.yaml
+ros2 launch steve_navigation localization.launch.py use_sim_time:=true map:=/path/to/your/map.yaml
 ```
 
 ### Visuals
