@@ -1,40 +1,56 @@
 # Neobotix GmbH
 # Author: Pradheep Padmanabhan
 
+import os
+
 import launch
-from ament_index_python.packages import get_package_share_directory, get_package_prefix
-from launch import LaunchDescription, LaunchContext
-from launch.actions import (DeclareLaunchArgument, IncludeLaunchDescription,
-                            OpaqueFunction, RegisterEventHandler, TimerAction)
+import xacro
+from ament_index_python.packages import get_package_prefix, get_package_share_directory
+from launch import LaunchContext, LaunchDescription
+from launch.actions import (
+    DeclareLaunchArgument,
+    IncludeLaunchDescription,
+    OpaqueFunction,
+    RegisterEventHandler,
+    TimerAction,
+)
+from launch.event_handlers import OnShutdown
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
-from launch_ros.substitutions import FindPackageShare
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterFile
-from launch.event_handlers import OnShutdown
-import os
-import xacro
+from launch_ros.substitutions import FindPackageShare
 
 """
 Description:
 
-This launch file is used to start a ROS2 simulation for a Neobotix robot in a specified environment. 
-It sets up the Gazebo simulator with the chosen robot and environment, 
+This launch file is used to start a ROS2 simulation for a Neobotix robot in a specified environment.
+It sets up the Gazebo simulator with the chosen robot and environment,
 optionally starts the robot state publisher, and enables keyboard teleoperation.
 
 You can launch this file using the following terminal commands:
 
-1. `ros2 launch neo_simulation2 simulation.launch.py --show-args`
+1. `ros2 launch steve_simulation simulation.launch.py --show-args`
    This command shows the arguments that can be passed to the launch file.
-2. `ros2 launch neo_simulation2 simulation.launch.py my_robot:=mpo_500 world:=neo_track1 arm_type:=ur5e`
+2. `ros2 launch steve_simulation simulation.launch.py my_robot:=mpo_500 world:=neo_track1 arm_type:=ur5e`
    This command launches the simulation with sample values for the arguments.
    !(only mpo_700 and mpo_500 support arms)
 """
 
+
 # OpaqueFunction is used to perform setup actions during launch through a Python function
-def launch_setup(context: LaunchContext, my_neo_robot_arg, my_neo_env_arg, robot_arm_arg, docking_adapter_arg, 
-                 include_wrist_camera_arg, include_depth_camera_arg, include_pan_tilt_arg, enable_teleop_arg, use_rviz_arg):
+def launch_setup(
+    context: LaunchContext,
+    my_neo_robot_arg,
+    my_neo_env_arg,
+    robot_arm_arg,
+    docking_adapter_arg,
+    include_wrist_camera_arg,
+    include_depth_camera_arg,
+    include_pan_tilt_arg,
+    enable_teleop_arg,
+    use_rviz_arg,
+):
     # Create a list to hold all the nodes
     launch_actions = []
     # The perform method of a LaunchConfiguration is called to evaluate its value.
@@ -49,15 +65,15 @@ def launch_setup(context: LaunchContext, my_neo_robot_arg, my_neo_env_arg, robot
     enable_teleop = enable_teleop_arg.perform(context)
     use_rviz = use_rviz_arg.perform(context)
     use_sim_time = True
-    
-    print("\n" + "="*70)
+
+    print("\n" + "=" * 70)
     print("  Neobotix ROS2 Simulation Launch")
-    print("="*70)
+    print("=" * 70)
     print(f"[INFO] Requested Robot: {my_neo_robot}")
     print(f"[INFO] Requested World: {my_neo_environment}")
     print(f"[INFO] Requested Arm Type: {robot_arm_type if robot_arm_type else 'None'}")
     print(f"[INFO] Docking Adapter: {use_docking_adapter}")
-    print("="*70 + "\n")
+    print("=" * 70 + "\n")
 
     robots = ["mpo_700", "mp_400", "mp_500", "mpo_500", "mmo_700"]
 
@@ -71,39 +87,52 @@ def launch_setup(context: LaunchContext, my_neo_robot_arg, my_neo_env_arg, robot
     else:
         print(f"[INFO] Robot validation successful: {my_neo_robot}")
 
-    with open('robot_name.txt', 'w') as file:
+    with open("robot_name.txt", "w") as file:
         file.write(my_neo_robot)
 
     # Remove arm_type if robot does not support it
-    if (robot_arm_type != ''):
-        if (my_neo_robot != "mpo_700" and my_neo_robot != "mpo_500" and my_neo_robot != "mmo_700"):
+    if robot_arm_type != "":
+        if (
+            my_neo_robot != "mpo_700"
+            and my_neo_robot != "mpo_500"
+            and my_neo_robot != "mmo_700"
+        ):
             print(f"[WARNING] Robot '{my_neo_robot}' does not support arm integration")
-            print("[WARNING] Arm support is only available for: mpo_700, mpo_500, mmo_700")
+            print(
+                "[WARNING] Arm support is only available for: mpo_700, mpo_500, mmo_700"
+            )
             print("[WARNING] Disabling arm_type")
-            robot_arm_type = ''
+            robot_arm_type = ""
         else:
             print(f"[INFO] Arm integration enabled: {robot_arm_type}")
 
     # Get the required paths for the world and robot robot_description_urdf
-    if (my_neo_environment == "neo_workshop" or my_neo_environment == "neo_track1" or my_neo_environment == "small_house" or my_neo_environment == "steve_house"):
+    if (
+        my_neo_environment == "neo_workshop"
+        or my_neo_environment == "neo_track1"
+        or my_neo_environment == "small_house"
+        or my_neo_environment == "steve_house"
+    ):
         world_path = os.path.join(
-            get_package_share_directory('neo_simulation2'),
-            'worlds',
-            my_neo_environment + '.world')
+            get_package_share_directory("steve_simulation"),
+            "worlds",
+            my_neo_environment + ".world",
+        )
         print(f"[INFO] Using built-in world: {my_neo_environment}")
     else:
         world_path = my_neo_environment
         print(f"[INFO] Using custom world file: {world_path}")
     print(f"[INFO] World path: {world_path}")
 
-
     # Setting the world and starting the Gazebo
-    pkg_share_path = os.path.join(get_package_prefix('neo_simulation2'), 'share')
-    workspace_install_share = os.path.join(os.getcwd(), 'install', 'share')
-    
-    robotiq_share = os.path.join(os.getcwd(), 'install', 'robotiq_description', 'share')
-    steve_simulation_models = os.path.join(get_package_share_directory('neo_simulation2'), 'models')
-    
+    pkg_share_path = os.path.join(get_package_prefix("steve_simulation"), "share")
+    workspace_install_share = os.path.join(os.getcwd(), "install", "share")
+
+    robotiq_share = os.path.join(os.getcwd(), "install", "robotiq_description", "share")
+    steve_simulation_models = os.path.join(
+        get_package_share_directory("steve_simulation"), "models"
+    )
+
     # Build GAZEBO_MODEL_PATH with only necessary directories
     model_paths = [workspace_install_share]
     if os.path.exists(robotiq_share):
@@ -111,112 +140,121 @@ def launch_setup(context: LaunchContext, my_neo_robot_arg, my_neo_env_arg, robot
     # Add AWS RoboMaker models for small house world
     if os.path.exists(steve_simulation_models):
         model_paths.append(steve_simulation_models)
-    
-    if 'GAZEBO_MODEL_PATH' in os.environ:
-        os.environ['GAZEBO_MODEL_PATH'] += os.pathsep + os.pathsep.join(model_paths)
+
+    if "GAZEBO_MODEL_PATH" in os.environ:
+        os.environ["GAZEBO_MODEL_PATH"] += os.pathsep + os.pathsep.join(model_paths)
     else:
-        os.environ['GAZEBO_MODEL_PATH'] = os.pathsep.join(model_paths)
-    
+        os.environ["GAZEBO_MODEL_PATH"] = os.pathsep.join(model_paths)
+
     print(f"[DEBUG] GAZEBO_MODEL_PATH set to: {os.environ['GAZEBO_MODEL_PATH']}")
-    
+
     # Set GAZEBO_RESOURCE_PATH for shader libs and rendering resources
-    if 'GAZEBO_RESOURCE_PATH' not in os.environ:
-        gazebo_resource_paths = ['/usr/share/gazebo-11', '/usr/share/gazebo']
-        os.environ['GAZEBO_RESOURCE_PATH'] = os.pathsep.join(gazebo_resource_paths)
-        print(f"[DEBUG] GAZEBO_RESOURCE_PATH set to: {os.environ['GAZEBO_RESOURCE_PATH']}")
+    if "GAZEBO_RESOURCE_PATH" not in os.environ:
+        gazebo_resource_paths = ["/usr/share/gazebo-11", "/usr/share/gazebo"]
+        os.environ["GAZEBO_RESOURCE_PATH"] = os.pathsep.join(gazebo_resource_paths)
+        print(
+            f"[DEBUG] GAZEBO_RESOURCE_PATH set to: {os.environ['GAZEBO_RESOURCE_PATH']}"
+        )
 
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(get_package_share_directory('gazebo_ros'), 'launch', 'gazebo.launch.py')
+            os.path.join(
+                get_package_share_directory("gazebo_ros"), "launch", "gazebo.launch.py"
+            )
         ),
         launch_arguments={
-            'world': world_path,
-            'verbose': 'true',
-        }.items()
+            "world": world_path,
+            "verbose": "true",
+        }.items(),
     )
 
     # Getting the robot description xacro
     robot_description_xacro = os.path.join(
-        get_package_share_directory('neo_simulation2'),
-        'robots/'+my_neo_robot+'/',
-        my_neo_robot+'.urdf.xacro')
+        get_package_share_directory("steve_simulation"),
+        "robots/" + my_neo_robot + "/",
+        my_neo_robot + ".urdf.xacro",
+    )
     print(f"[INFO] Robot URDF path: {robot_description_xacro}")
-    
+
     # Docking adapter is only for MPO 700
-    if (my_neo_robot != "mpo_700"):
-        if use_docking_adapter == 'True':
+    if my_neo_robot != "mpo_700":
+        if use_docking_adapter == "True":
             print(f"[WARNING] Docking adapter only supported for mpo_700")
             print("[WARNING] Disabling docking adapter")
         use_docking_adapter = False
-        
-     # use_gazebo is set to True since this code launches the robot in simulation
+
+    # use_gazebo is set to True since this code launches the robot in simulation
     xacro_args = {
-        'use_gazebo': 'true',
-        'arm_type': robot_arm_type,
-        'use_docking_adapter': use_docking_adapter,
-        'include_wrist_camera': include_wrist_camera,
-        'include_depth_camera': include_depth_camera,
-        'include_pan_tilt': include_pan_tilt
+        "use_gazebo": "true",
+        "arm_type": robot_arm_type,
+        "use_docking_adapter": use_docking_adapter,
+        "include_wrist_camera": include_wrist_camera,
+        "include_depth_camera": include_depth_camera,
+        "include_pan_tilt": include_pan_tilt,
     }
     print("[INFO] Processing URDF with xacro...")
     print(f"[INFO] Xacro arguments: {xacro_args}")
 
     # Use xacro to process the file with the argunments above
     robot_description_file = xacro.process_file(
-        robot_description_xacro, 
-        mappings=xacro_args
-        ).toxml()
+        robot_description_xacro, mappings=xacro_args
+    ).toxml()
     print("[INFO] URDF processing complete")
 
     # Spawning the robot
     # Using /usr/bin/python3 explicitly to avoid Anaconda conflicts
     spawn_entity = Node(
         package=None,
-        executable='/usr/bin/python3',
+        executable="/usr/bin/python3",
         arguments=[
-            os.path.join(get_package_prefix('gazebo_ros'), 'lib', 'gazebo_ros', 'spawn_entity.py'),
-            '-entity', my_neo_robot,
-            '-topic', '/robot_description',
-            '-timeout', '300.0',
-            '-Y', '3.14159'  # 180° rotation around Z-axis (pi radians)
+            os.path.join(
+                get_package_prefix("gazebo_ros"), "lib", "gazebo_ros", "spawn_entity.py"
+            ),
+            "-entity",
+            my_neo_robot,
+            "-topic",
+            "/robot_description",
+            "-timeout",
+            "300.0",
+            "-Y",
+            "3.14159",  # 180° rotation around Z-axis (pi radians)
         ],
-        output='screen'
+        output="screen",
     )
 
     # Start the robot state publisher node
     start_robot_state_publisher_cmd = Node(
-        package='robot_state_publisher',
-        executable='robot_state_publisher',
-        name='robot_state_publisher',
-        output='screen',
-        parameters=[{'use_sim_time': use_sim_time, 
-                    'robot_description': robot_description_file}]
+        package="robot_state_publisher",
+        executable="robot_state_publisher",
+        name="robot_state_publisher",
+        output="screen",
+        parameters=[
+            {"use_sim_time": use_sim_time, "robot_description": robot_description_file}
+        ],
     )
-
-
 
     # Starting the teleop node
     teleop = Node(
-        package='teleop_twist_keyboard',
+        package="teleop_twist_keyboard",
         executable="teleop_twist_keyboard",
-        output='screen',
+        output="screen",
         # prefix = 'xterm -e',
-        name='teleop'
+        name="teleop",
     )
 
     # RViz for visualization and joint control
     rviz_config = os.path.join(
-        get_package_share_directory('neo_simulation2'),
-        'rviz',
-        'robot_description_rviz.rviz'
+        get_package_share_directory("steve_simulation"),
+        "rviz",
+        "robot_description_rviz.rviz",
     )
     rviz = Node(
-        package='rviz2',
-        executable='rviz2',
-        name='rviz2',
-        output='screen',
-        arguments=['-d', rviz_config],
-        parameters=[{'use_sim_time': use_sim_time}]
+        package="rviz2",
+        executable="rviz2",
+        name="rviz2",
+        output="screen",
+        arguments=["-d", rviz_config],
+        parameters=[{"use_sim_time": use_sim_time}],
     )
 
     joint_state_broadcaster_spawner = Node(
@@ -237,8 +275,6 @@ def launch_setup(context: LaunchContext, my_neo_robot_arg, my_neo_env_arg, robot
         arguments=["pan_tilt_controller", "-c", "/controller_manager"],
     )
 
-
-
     # See Issue: https://github.com/ros2/rclpy/issues/1287
     # Cannot delete the newly create file. The user has to delete it on his own
     # Refer documentation for more info
@@ -252,126 +288,127 @@ def launch_setup(context: LaunchContext, my_neo_robot_arg, my_neo_env_arg, robot
     print("\n[INFO] Launching nodes...")
     print("[INFO] - Robot State Publisher")
     launch_actions.append(start_robot_state_publisher_cmd)
-    
+
     # Collect controller spawners to delay them
     controller_spawners = []
-    if robot_arm_type != '':
+    if robot_arm_type != "":
         print("[INFO] - Joint State Broadcaster (delayed 2s)")
         print("[INFO] - Joint Trajectory Controller (delayed 2s)")
         controller_spawners.append(joint_state_broadcaster_spawner)
         controller_spawners.append(initial_joint_controller_spawner_stopped)
-    
-    if include_pan_tilt == 'true':
+
+    if include_pan_tilt == "true":
         print("[INFO] - Pan-Tilt Controller (delayed 2s)")
         controller_spawners.append(pan_tilt_controller_spawner)
-    
+
     # Add 2-second delay to controller spawners to allow gazebo_ros2_control plugin to initialize
     # Reduced from 15s to prevent arm from falling due to gravity before controllers activate
     if controller_spawners:
-        delayed_controllers = TimerAction(
-            period=2.0,
-            actions=controller_spawners
-        )
+        delayed_controllers = TimerAction(period=2.0, actions=controller_spawners)
         launch_actions.append(delayed_controllers)
-
-
 
     print("[INFO] - Gazebo Simulator")
     launch_actions.append(gazebo)
     print(f"[INFO] - Spawn Entity ({my_neo_robot})")
     launch_actions.append(spawn_entity)
 
-
-
-    if use_rviz.lower() == 'true':
+    if use_rviz.lower() == "true":
         print("[INFO] - RViz2 (for visualization and joint control)")
         launch_actions.append(rviz)
     else:
         print("[INFO] - RViz2: Disabled (use use_rviz:=true to enable)")
-    
-    if enable_teleop == 'true':
+
+    if enable_teleop == "true":
         print("[INFO] - Teleop Twist Keyboard")
         launch_actions.append(teleop)
     else:
-        print("[INFO] - Teleop Twist Keyboard: Disabled (use enable_teleop:=true to enable)")
+        print(
+            "[INFO] - Teleop Twist Keyboard: Disabled (use enable_teleop:=true to enable)"
+        )
     # launch_actions.append(shutdown_event)
-    print("\n" + "="*70)
+    print("\n" + "=" * 70)
     print("  Launch Configuration Complete")
-    print("="*70)
+    print("=" * 70)
     print(f"  Robot: {my_neo_robot}")
     print(f"  World: {my_neo_environment}")
     print(f"  Arm: {robot_arm_type if robot_arm_type else 'Disabled'}")
     print(f"  RViz: {'Enabled' if use_rviz.lower() == 'true' else 'Disabled'}")
     print(f"  Nodes: {len(launch_actions)} total")
-    print("="*70 + "\n")
+    print("=" * 70 + "\n")
 
     return launch_actions
+
 
 def generate_launch_description():
     ld = LaunchDescription()
 
     # Declare launch arguments 'my_robot' and 'world' with default values and descriptions
     declare_my_robot_arg = DeclareLaunchArgument(
-        'my_robot', 
-        default_value='mpo_700',
-        description='Robot Types: "mpo_700", "mpo_500", "mp_400", "mp_500"'
-    ) 
-    
+        "my_robot",
+        default_value="mpo_700",
+        description='Robot Types: "mpo_700", "mpo_500", "mp_400", "mp_500"',
+    )
+
     declare_world_name_arg = DeclareLaunchArgument(
-        'world',
-        default_value='small_house',
-        description='Available worlds: "neo_track1", "neo_workshop", "small_house"'
+        "world",
+        default_value="small_house",
+        description='Available worlds: "neo_track1", "neo_workshop", "small_house"',
     )
 
     declare_arm_type_cmd = DeclareLaunchArgument(
-        'arm_type', default_value='',
-        description='Arm Types:\n'
-        '\t Elite Arms: ec66, cs66\n'
-        '\t Universal Robotics: ur5, ur10, ur5e, ur10e'        
+        "arm_type",
+        default_value="",
+        description="Arm Types:\n"
+        "\t Elite Arms: ec66, cs66\n"
+        "\t Universal Robotics: ur5, ur10, ur5e, ur10e",
     )
 
     declare_docking_adapter_cmd = DeclareLaunchArgument(
-        'use_docking_adapter', default_value='False',
-        description='Set True to use the docking adapter for the robot\n'
-        '\t Neobotix: docking_adapter'
+        "use_docking_adapter",
+        default_value="False",
+        description="Set True to use the docking adapter for the robot\n"
+        "\t Neobotix: docking_adapter",
     )
 
     declare_wrist_camera_cmd = DeclareLaunchArgument(
-        'include_wrist_camera', default_value='true',
-        description='Include wrist D405 camera on arm'
+        "include_wrist_camera",
+        default_value="true",
+        description="Include wrist D405 camera on arm",
     )
 
     declare_depth_camera_cmd = DeclareLaunchArgument(
-        'include_depth_camera', default_value='false',
-        description='Include front depth camera'
+        "include_depth_camera",
+        default_value="false",
+        description="Include front depth camera",
     )
 
     declare_pan_tilt_cmd = DeclareLaunchArgument(
-        'include_pan_tilt', default_value='false',
-        description='Include pan-tilt camera tower'
+        "include_pan_tilt",
+        default_value="false",
+        description="Include pan-tilt camera tower",
     )
 
     declare_enable_teleop_cmd = DeclareLaunchArgument(
-        'enable_teleop', default_value='false',
-        description='Enable teleop_twist_keyboard (requires interactive terminal, disable for Docker)'
+        "enable_teleop",
+        default_value="false",
+        description="Enable teleop_twist_keyboard (requires interactive terminal, disable for Docker)",
     )
 
     declare_use_rviz_cmd = DeclareLaunchArgument(
-        'use_rviz', default_value='true',
-        description='Launch RViz for visualization'
+        "use_rviz", default_value="true", description="Launch RViz for visualization"
     )
 
     # Create launch configuration variables for the robot and map name
-    my_neo_robot_arg = LaunchConfiguration('my_robot')
-    my_neo_env_arg = LaunchConfiguration('world')
-    robot_arm_arg = LaunchConfiguration('arm_type')
-    docking_adapter_arg = LaunchConfiguration('use_docking_adapter')
-    include_wrist_camera_arg = LaunchConfiguration('include_wrist_camera')
-    include_depth_camera_arg = LaunchConfiguration('include_depth_camera')
+    my_neo_robot_arg = LaunchConfiguration("my_robot")
+    my_neo_env_arg = LaunchConfiguration("world")
+    robot_arm_arg = LaunchConfiguration("arm_type")
+    docking_adapter_arg = LaunchConfiguration("use_docking_adapter")
+    include_wrist_camera_arg = LaunchConfiguration("include_wrist_camera")
+    include_depth_camera_arg = LaunchConfiguration("include_depth_camera")
 
-    include_pan_tilt_arg = LaunchConfiguration('include_pan_tilt')
-    enable_teleop_arg = LaunchConfiguration('enable_teleop')
-    use_rviz_arg = LaunchConfiguration('use_rviz')
+    include_pan_tilt_arg = LaunchConfiguration("include_pan_tilt")
+    enable_teleop_arg = LaunchConfiguration("enable_teleop")
+    use_rviz_arg = LaunchConfiguration("use_rviz")
 
     ld.add_action(declare_my_robot_arg)
     ld.add_action(declare_world_name_arg)
@@ -385,23 +422,19 @@ def generate_launch_description():
     ld.add_action(declare_use_rviz_cmd)
 
     context_arguments = [
-        my_neo_robot_arg, 
-        my_neo_env_arg, 
-        robot_arm_arg, 
+        my_neo_robot_arg,
+        my_neo_env_arg,
+        robot_arm_arg,
         docking_adapter_arg,
         include_wrist_camera_arg,
         include_depth_camera_arg,
         include_pan_tilt_arg,
         enable_teleop_arg,
-        use_rviz_arg
+        use_rviz_arg,
     ]
 
-    opq_function = OpaqueFunction(
-        function=launch_setup, 
-        args=context_arguments
-    )
+    opq_function = OpaqueFunction(function=launch_setup, args=context_arguments)
 
     ld.add_action(opq_function)
 
     return ld
-

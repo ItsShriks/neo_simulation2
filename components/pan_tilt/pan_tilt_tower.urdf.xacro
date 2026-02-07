@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!-- Complete Pan-Tilt Tower with Dynamixel Motors and L515 Camera -->
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
-  
+
   <xacro:macro name="pan_tilt_tower" params="parent_link use_gazebo">
 
     <!-- Tower properties matching steve_description -->
@@ -19,7 +19,7 @@
       <child link="pan_tilt_tower_base"/>
       <origin xyz="-0.15 0 1.1" rpy="0 0 0" />
     </joint>
-    
+
     <!-- Tower vertical support pole -->
     <link name="pan_tilt_tower_base">
       <visual>
@@ -41,19 +41,19 @@
     </link>
 
     <!-- Include Dynamixel pan-tilt mechanism -->
-    <xacro:include filename="$(find neo_simulation2)/components/dynamixel/steve_pan_tilt.xacro"/>
+    <xacro:include filename="$(find steve_simulation)/components/dynamixel/steve_pan_tilt.xacro"/>
     <xacro:steve_pan_tilt parent="pan_tilt_tower_base" name="pan_tilt"/>
 
     <!-- ROS2 Control for Pan-Tilt -->
-    <xacro:include filename="$(find neo_simulation2)/components/pan_tilt/pan_tilt.ros2_control.xacro"/>
+    <xacro:include filename="$(find steve_simulation)/components/pan_tilt/pan_tilt.ros2_control.xacro"/>
     <xacro:pan_tilt_ros2_control name="pan_tilt"/>
 
 
     <!-- Include L515 camera macro -->
-    <xacro:include filename="$(find neo_simulation2)/components/cameras/l515_simplified.urdf.xacro"/>
-    
+    <xacro:include filename="$(find steve_simulation)/components/cameras/l515_simplified.urdf.xacro"/>
+
     <!-- L515 Camera mounted on pan bracket (follows both pan and tilt) -->
-    <xacro:sensor_l515_simplified 
+    <xacro:sensor_l515_simplified
       parent="pan_tilt_pan_bracket_link"
       name="pan_tilt_camera"
       use_gazebo="${use_gazebo}">
@@ -82,5 +82,5 @@
     </xacro:if>
 
   </xacro:macro>
-  
+
 </robot>

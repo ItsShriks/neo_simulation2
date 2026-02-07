@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>neo_simulation2</name>
+  <name>steve_simulation</name>
   <version>1.0.3</version>
   <description>ROS-2 Simulation packages for neobotix robots</description>
   <maintainer email="padmanabhan@neobotix.de">Padmanabhan Pradheep</maintainer>
@@ -11,7 +11,7 @@
   <exec_depend>launch_ros</exec_depend>
   <exec_depend>navigation2</exec_depend>
   <exec_depend>slam_toolbox</exec_depend>
-  <exec_depend>neo_nav2_bringup</exec_depend>
+  <exec_depend>steve_navigation</exec_depend>
   <exec_depend>gazebo_ros</exec_depend>
   <exec_depend>ur_description</exec_depend>
   <exec_depend>controller_manager</exec_depend>
@@ -23,7 +23,7 @@
   <test_depend>ament_flake8</test_depend>
   <test_depend>ament_pep257</test_depend>
   <test_depend>python3-pytest</test_depend>
-  
+
   <export>
     <build_type>ament_cmake</build_type>
     <gazebo_ros gazebo_model_path="${prefix}/.." />

@@ -4,7 +4,7 @@
 
     <!--set use_gazebo = false for implementation on real robot-->
     <xacro:arg name="use_gazebo" default="true"/>
-    
+
     <!--set use_docking_adapter = false (not applicable for MMO_700)-->
     <xacro:arg name="use_docking_adapter" default="false"/>
 
@@ -16,7 +16,7 @@
 
     <!-- Wrist camera type: d405_angled, d405_straight; none otherwise -->
     <xacro:arg name="wrist_camera" default=""/>
-    
+
     <!-- Camera configuration arguments -->
     <xacro:arg name="include_wrist_camera" default="true"/>
     <xacro:arg name="include_depth_camera" default="false"/>
@@ -30,11 +30,11 @@
     <xacro:property name="ODM_joint_type" value="fixed"/>
 
     <!-- import main body description -->
-    <xacro:include filename="$(find neo_simulation2)/robots/mmo_700/urdf/mmo_700_body.urdf.xacro"/>
- 
+    <xacro:include filename="$(find steve_simulation)/robots/mmo_700/urdf/mmo_700_body.urdf.xacro"/>
+
     <!-- If Simulation is used -->
     <xacro:if value="$(arg use_gazebo)">
-        <xacro:include filename="$(find neo_simulation2)/robots/mmo_700/urdf/mmo_700_gazebo.urdf.xacro"/>
+        <xacro:include filename="$(find steve_simulation)/robots/mmo_700/urdf/mmo_700_gazebo.urdf.xacro"/>
     </xacro:if>
 
     <!-- Check if one of the arms is used -->
@@ -45,7 +45,7 @@
     <!-- If Arm is used -->
     <xacro:if value="${use_arm}">
         <!-- cabinet -->
-        <xacro:include filename="$(find neo_simulation2)/components/common_macro/mpo_cabinet_macro.xacro"/>
+        <xacro:include filename="$(find steve_simulation)/components/common_macro/mpo_cabinet_macro.xacro"/>
         <xacro:cabinet
             neo_robot_name="mmo_700"
             parent_link="base_link"
@@ -59,36 +59,34 @@
 
         <!-- Universal Robotics Arm-->
         <xacro:if value="${arm == 'ur5' or arm == 'ur10' or arm == 'ur5e' or arm == 'ur10e'}">
-            <xacro:include filename="$(find neo_simulation2)/components/arm/ur_arm.urdf.xacro"/>
+            <xacro:include filename="$(find steve_simulation)/components/arm/ur_arm.urdf.xacro"/>
         </xacro:if>
 
         <!-- Elite Arm -->
         <xacro:if value="${arm == 'ec66' or arm == 'cs66'}">
-            <xacro:include filename="$(find neo_simulation2)/components/arm/elite_arm.urdf.xacro"/>
+            <xacro:include filename="$(find steve_simulation)/components/arm/elite_arm.urdf.xacro"/>
         </xacro:if>
-        
-        
+
+
         <!-- Wrist camera is now integrated into ur_arm assembly (with dummy end-effector) -->
         <!-- <xacro:if value="$(arg include_wrist_camera)">
-            <xacro:include filename="$(find neo_simulation2)/components/cameras/wrist_d405.urdf.xacro"/>
+            <xacro:include filename="$(find steve_simulation)/components/cameras/wrist_d405.urdf.xacro"/>
             <xacro:wrist_d405 parent="ur5etool0" use_gazebo="$(arg use_gazebo)"/>
         </xacro:if> -->
     </xacro:if>
-    
+
     <!-- Optional depth camera on base -->
     <xacro:if value="$(arg include_depth_camera)">
-        <xacro:include filename="$(find neo_simulation2)/robots/mmo_700/urdf/macro/depth_camera_macro.xacro"/>
+        <xacro:include filename="$(find steve_simulation)/robots/mmo_700/urdf/macro/depth_camera_macro.xacro"/>
         <xacro:depth_camera name="front_camera" parent="base_link" use_gazebo="$(arg use_gazebo)">
             <origin xyz="0.292 0 0.716" rpy="0 0 0"/>
         </xacro:depth_camera>
     </xacro:if>
-    
+
     <!-- Pan-tilt camera tower on base -->
     <xacro:if value="$(arg include_pan_tilt)">
-        <xacro:include filename="$(find neo_simulation2)/components/pan_tilt/pan_tilt_tower.urdf.xacro"/>
+        <xacro:include filename="$(find steve_simulation)/components/pan_tilt/pan_tilt_tower.urdf.xacro"/>
         <xacro:pan_tilt_tower parent_link="base_link" use_gazebo="$(arg use_gazebo)"/>
     </xacro:if>
 
 </robot>
-
-

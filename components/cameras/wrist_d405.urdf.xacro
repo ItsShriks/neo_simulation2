@@ -17,7 +17,7 @@
   <visual>
     <origin xyz="0 0 0" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://neo_simulation2/robots/mmo_700/meshes/cameras/d405/UR5_LastJointSensor_D405_Psyonic.STL" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://steve_simulation/robots/mmo_700/meshes/cameras/d405/UR5_LastJointSensor_D405_Psyonic.STL" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="grey"/>
   </visual>
@@ -46,7 +46,7 @@
   <visual>
     <origin xyz="0.01 0 0.01" rpy="0 1.57 0"/>
     <geometry>
-      <mesh filename="package://neo_simulation2/robots/mmo_700/meshes/cameras/d405/d405.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://steve_simulation/robots/mmo_700/meshes/cameras/d405/d405.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="grey"/>
   </visual>

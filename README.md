@@ -23,12 +23,12 @@ source install/setup.bash
 ### 4. Launch the simulation
 Basic launch:
 ```bash
-ros2 launch neo_simulation2 simulation.launch.py
+ros2 launch steve_simulation simulation.launch.py
 ```
 
 #### Example: Launch with custom robot, world, arm, and pan-tilt
 ```bash
-ros2 launch neo_simulation2 simulation.launch.py \
+ros2 launch steve_simulation simulation.launch.py \
 	my_robot:=mmo_700 world:=neo_workshop arm_type:=ur5e include_pan_tilt:=true
 ```
 
@@ -38,13 +38,13 @@ We have provided dedicated launch files for running SLAM and Localization with t
 #### SLAM Simulation
 This launches the simulation with the MMO-700 robot and starts SLAM Toolbox for mapping.
 ```bash
-ros2 launch neo_nav2_bringup slam_simulation.launch.py
+ros2 launch steve_navigation slam_simulation.launch.py
 ```
 
 #### Localization Simulation
 This launches the simulation and starts AMCL for localization. You can specify a map file.
 ```bash
-ros2 launch neo_nav2_bringup localization_simulation.launch.py map:=/path/to/your/map.yaml
+ros2 launch steve_navigation localization_simulation.launch.py map:=/path/to/your/map.yaml
 ```
 
 ### Visuals

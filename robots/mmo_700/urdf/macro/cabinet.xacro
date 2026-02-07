@@ -14,23 +14,23 @@
         <mass value="2" />
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <inertia ixx="0.457072" ixy="0.0" ixz="0.0"
-                 iyy="0.23616" iyz="0.0" 
+                 iyy="0.23616" iyz="0.0"
                  izz="0.686" />
       </inertial>
       <visual>
         <origin xyz="0 0 0" rpy="0 0 -1.5708" />
         <geometry>
-            <mesh filename="package://neo_simulation2/robots/mmo_700/meshes/cabin.dae" scale="0.001 0.001 0.001"/>
+            <mesh filename="package://steve_simulation/robots/mmo_700/meshes/cabin.dae" scale="0.001 0.001 0.001"/>
         </geometry>
       </visual>
       <collision>
         <origin xyz="0 0 0" rpy="0 0 -1.5708" />
         <geometry>
-            <mesh filename="package://neo_simulation2/robots/mmo_700/meshes/cabin.dae" scale="0.001 0.001 0.001"/>
+            <mesh filename="package://steve_simulation/robots/mmo_700/meshes/cabin.dae" scale="0.001 0.001 0.001"/>
         </geometry>
       </collision>
     </link>
 
   </xacro:macro>
-  
+
 </robot>

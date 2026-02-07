@@ -21,18 +21,18 @@
     <visual>
      <origin xyz="0 0 0.10" rpy="0 0 0"/>
      <geometry>
-        <mesh filename="package://neo_simulation2/robots/mmo_700/meshes/MPO-700-HEAD.dae" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://steve_simulation/robots/mmo_700/meshes/MPO-700-HEAD.dae" scale="0.001 0.001 0.001"/>
      </geometry>
     </visual>
 
     <collision>
      <origin xyz="0 0 0.10" rpy="0 0 0" />
      <geometry>
-        <mesh filename="package://neo_simulation2/robots/mmo_700/meshes/MPO-700-HEAD.dae" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://steve_simulation/robots/mmo_700/meshes/MPO-700-HEAD.dae" scale="0.001 0.001 0.001"/>
      </geometry>
     </collision>
    </link>
-   
+
   </xacro:macro>
 
   <xacro:macro name="mpo_700_caster_1" params="name parent *origin">
@@ -54,20 +54,20 @@
     <visual>
      <origin xyz="0 0 0.10" rpy="0 0 0"/>
      <geometry>
-        <mesh filename="package://neo_simulation2/robots/mmo_700/meshes/MPO-700-HEAD.dae" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://steve_simulation/robots/mmo_700/meshes/MPO-700-HEAD.dae" scale="0.001 0.001 0.001"/>
      </geometry>
     </visual>
 
     <collision>
      <origin xyz="0 0 0.10" rpy="0 0 0" />
      <geometry>
-        <mesh filename="package://neo_simulation2/robots/mmo_700/meshes/MPO-700-HEAD.dae" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://steve_simulation/robots/mmo_700/meshes/MPO-700-HEAD.dae" scale="0.001 0.001 0.001"/>
      </geometry>
     </collision>
    </link>
-   
+
   </xacro:macro>
-  
+
   <xacro:macro name="mpo_700_caster_2" params="name parent *origin">
    <joint name="${name}_joint" type="fixed">
     <xacro:insert_block name="origin" />
@@ -87,18 +87,18 @@
     <visual>
      <origin xyz="0 0 0.10" rpy="0 0 0"/>
      <geometry>
-        <mesh filename="package://neo_simulation2/robots/mmo_700/meshes/MPO-700-HEAD.dae" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://steve_simulation/robots/mmo_700/meshes/MPO-700-HEAD.dae" scale="0.001 0.001 0.001"/>
      </geometry>
     </visual>
 
     <collision>
      <origin xyz="0 0 0.10" rpy="0 0 0" />
      <geometry>
-        <mesh filename="package://neo_simulation2/robots/mmo_700/meshes/MPO-700-HEAD.dae" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://steve_simulation/robots/mmo_700/meshes/MPO-700-HEAD.dae" scale="0.001 0.001 0.001"/>
      </geometry>
     </collision>
    </link>
-   
+
   </xacro:macro>
 
   <xacro:macro name="mpo_700_caster_3" params="name parent *origin">
@@ -120,19 +120,17 @@
     <visual>
      <origin xyz="0 0 0.10" rpy="0 0 0"/>
      <geometry>
-        <mesh filename="package://neo_simulation2/robots/mmo_700/meshes/MPO-700-HEAD.dae" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://steve_simulation/robots/mmo_700/meshes/MPO-700-HEAD.dae" scale="0.001 0.001 0.001"/>
      </geometry>
     </visual>
 
     <collision>
      <origin xyz="0 0 0.10" rpy="0 0 0" />
      <geometry>
-        <mesh filename="package://neo_simulation2/robots/mmo_700/meshes/MPO-700-HEAD.dae" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://steve_simulation/robots/mmo_700/meshes/MPO-700-HEAD.dae" scale="0.001 0.001 0.001"/>
      </geometry>
     </collision>
    </link>
-   
+
   </xacro:macro>
 </robot>
-
-

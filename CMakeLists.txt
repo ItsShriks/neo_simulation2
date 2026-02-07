@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(neo_simulation2)
+project(steve_simulation)
 
 find_package(ament_cmake REQUIRED)
 

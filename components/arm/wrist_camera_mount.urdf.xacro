@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <!-- Dummy end-effector with wrist camera for real robot (no gripper) -->
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="wrist_camera_mount">
-            
+
             <!-- Get tf_prefix from parent scope -->
             <xacro:arg name="tf_prefix" default="ur5e"/>
             <xacro:property name="tf_prefix" value="$(arg tf_prefix)"/>
             <xacro:arg name="use_gazebo" default="true"/>
-            
+
             <material name="mount_grey">
               <color rgba="0.7 0.7 0.7 1"/>
             </material>
@@ -41,7 +41,7 @@
             </link>
 
             <!-- Include wrist camera -->
-            <xacro:include filename="$(find neo_simulation2)/components/cameras/wrist_d405.urdf.xacro"/>
+            <xacro:include filename="$(find steve_simulation)/components/cameras/wrist_d405.urdf.xacro"/>
             <xacro:wrist_d405 parent="dummy_end_effector" use_gazebo="$(arg use_gazebo)"/>
 
 </robot>
