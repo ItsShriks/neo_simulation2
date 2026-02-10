@@ -50,6 +50,8 @@ def launch_setup(
     include_pan_tilt_arg,
     enable_teleop_arg,
     use_rviz_arg,
+    launch_map_server_arg,
+    map_arg,
 ):
     # Create a list to hold all the nodes
     launch_actions = []
@@ -64,7 +66,49 @@ def launch_setup(
     include_pan_tilt = include_pan_tilt_arg.perform(context)
     enable_teleop = enable_teleop_arg.perform(context)
     use_rviz = use_rviz_arg.perform(context)
+    launch_map_server = launch_map_server_arg.perform(context)
+    map_path = map_arg.perform(context)
     use_sim_time = True
+
+    # Map auto-resolution logic
+    if launch_map_server.lower() == "true":
+        if map_path and not os.path.exists(map_path):
+            try:
+                sim_pkg_share = get_package_share_directory("steve_simulation")
+                potential_map = os.path.join(sim_pkg_share, "maps", f"{map_path}.yaml")
+                if os.path.exists(potential_map):
+                    map_path = potential_map
+                else:
+                    potential_map_asis = os.path.join(sim_pkg_share, "maps", map_path)
+                    if os.path.exists(potential_map_asis):
+                        map_path = potential_map_asis
+                    elif not map_path.endswith('.yaml'):
+                        potential_map_yaml = os.path.join(sim_pkg_share, "maps", f"{map_path}.yaml")
+                        if os.path.exists(potential_map_yaml):
+                            map_path = potential_map_yaml
+            except Exception as e:
+                print(f"[WARN] Could not resolve map path for '{map_path}': {e}")
+
+        if map_path == "":
+            if my_neo_environment in ["neo_workshop", "neo_track1", "small_house"]:
+                world_name = my_neo_environment
+            else:
+                world_name = os.path.splitext(os.path.basename(my_neo_environment))[0]
+            
+            try:
+                map_path = os.path.join(
+                    get_package_share_directory("steve_simulation"),
+                    "maps",
+                    f"{world_name}.yaml",
+                )
+                print(f"[INFO] Auto-detected map file: {map_path}")
+            except Exception:
+                print(f"[WARN] Could not auto-detect map for world: {world_name}")
+
+    if launch_map_server.lower() == "true" and (not map_path or not os.path.exists(map_path)):
+        print(f"[WARN] Map server requested but map file not found: {map_path}")
+        print("[WARN] Disabling map server")
+        launch_map_server = "false"
 
     print("\n" + "=" * 70)
     print("  Neobotix ROS2 Simulation Launch")
@@ -325,6 +369,29 @@ def launch_setup(
         print(
             "[INFO] - Teleop Twist Keyboard: Disabled (use enable_teleop:=true to enable)"
         )
+
+    if launch_map_server.lower() == "true":
+        print(f"[INFO] - Map Server (map: {map_path})")
+        map_server_node = Node(
+            package='nav2_map_server',
+            executable='map_server',
+            name='map_server',
+            output='screen',
+            parameters=[{'yaml_filename': map_path}, {'use_sim_time': use_sim_time}]
+        )
+
+        lifecycle_manager_node = Node(
+            package='nav2_lifecycle_manager',
+            executable='lifecycle_manager',
+            name='lifecycle_manager_map',
+            output='screen',
+            parameters=[{'use_sim_time': use_sim_time},
+                        {'autostart': True},
+                        {'node_names': ['map_server']}]
+        )
+        launch_actions.append(map_server_node)
+        launch_actions.append(lifecycle_manager_node)
+
     # launch_actions.append(shutdown_event)
     print("\n" + "=" * 70)
     print("  Launch Configuration Complete")
@@ -345,8 +412,8 @@ def generate_launch_description():
     # Declare launch arguments 'my_robot' and 'world' with default values and descriptions
     declare_my_robot_arg = DeclareLaunchArgument(
         "my_robot",
-        default_value="mpo_700",
-        description='Robot Types: "mpo_700", "mpo_500", "mp_400", "mp_500"',
+        default_value="mmo_700",
+        description='Only set to mmo_700 for this project',
     )
 
     declare_world_name_arg = DeclareLaunchArgument(
@@ -357,7 +424,7 @@ def generate_launch_description():
 
     declare_arm_type_cmd = DeclareLaunchArgument(
         "arm_type",
-        default_value="",
+        default_value="ur5e",
         description="Arm Types:\n"
         "\t Elite Arms: ec66, cs66\n"
         "\t Universal Robotics: ur5, ur10, ur5e, ur10e",
@@ -384,7 +451,7 @@ def generate_launch_description():
 
     declare_pan_tilt_cmd = DeclareLaunchArgument(
         "include_pan_tilt",
-        default_value="false",
+        default_value="true",
         description="Include pan-tilt camera tower",
     )
 
@@ -398,13 +465,28 @@ def generate_launch_description():
         "use_rviz", default_value="true", description="Launch RViz for visualization"
     )
 
+    declare_map_cmd = DeclareLaunchArgument(
+        "map",
+        default_value="",
+        description="Full path to map yaml file (empty = auto-detect from world)",
+    )
+
+    declare_launch_map_server_cmd = DeclareLaunchArgument(
+        "launch_map_server",
+        default_value="true",
+        description="Launch Map Server and Lifecycle Manager",
+    )
+
     # Create launch configuration variables for the robot and map name
     my_neo_robot_arg = LaunchConfiguration("my_robot")
+
     my_neo_env_arg = LaunchConfiguration("world")
     robot_arm_arg = LaunchConfiguration("arm_type")
     docking_adapter_arg = LaunchConfiguration("use_docking_adapter")
     include_wrist_camera_arg = LaunchConfiguration("include_wrist_camera")
     include_depth_camera_arg = LaunchConfiguration("include_depth_camera")
+    map_arg = LaunchConfiguration("map")
+    launch_map_server_arg = LaunchConfiguration("launch_map_server")
 
     include_pan_tilt_arg = LaunchConfiguration("include_pan_tilt")
     enable_teleop_arg = LaunchConfiguration("enable_teleop")
@@ -420,6 +502,8 @@ def generate_launch_description():
     ld.add_action(declare_pan_tilt_cmd)
     ld.add_action(declare_enable_teleop_cmd)
     ld.add_action(declare_use_rviz_cmd)
+    ld.add_action(declare_map_cmd)
+    ld.add_action(declare_launch_map_server_cmd)
 
     context_arguments = [
         my_neo_robot_arg,
@@ -431,6 +515,8 @@ def generate_launch_description():
         include_pan_tilt_arg,
         enable_teleop_arg,
         use_rviz_arg,
+        launch_map_server_arg,
+        map_arg,
     ]
 
     opq_function = OpaqueFunction(function=launch_setup, args=context_arguments)
