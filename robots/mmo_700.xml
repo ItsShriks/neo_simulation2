@@ -1,0 +1,222 @@
+<mujoco model="mmo_700">
+  <default>
+    <default class="robot">
+      <default class="visual">
+        <geom contype="0" conaffinity="0" group="2" />
+      </default>
+      <default class="collision">
+        <geom contype="0" conaffinity="1" group="3" />
+      </default>
+    </default>
+    <default class="floor">
+      <geom type="plane" size="0 0 0.05" material="groundplane" />
+    </default>
+  </default>
+
+  <compiler angle="radian" meshdir="." balanceinertia="true" />
+
+  <visual>
+    <global offwidth="3840" offheight="2160" />
+  </visual>
+
+  <worldbody>
+    <body name="base_link" childclass="robot" pos="0 0 -0.01">
+      <geom name="base_link_collision" quat="0.707 0 0 -0.7072" type="mesh" mesh="base_link_collision_MPO_700_BODY" scale="0.001 0.001 0.001" class="collision" />
+      <geom name="base_link_visual" quat="0.707 0 0 -0.7072" type="mesh" mesh="base_link_MPO_700_BODY" scale="0.001 0.001 0.001" material="mount_grey" class="visual" />
+      <body name="base_footprint" />
+      <body name="lidar_1_link" pos="0.338 0.288 0.223" quat="0.0007 0.923 0.3848 0.0003">
+        <inertial pos="0 0 0" mass="1.2" diaginertia="0.11042056 0.11042056 0.11042056" />
+        <geom name="lidar_1_link_collision" pos="0 0 -0.12" quat="0.0006 -0.0006 -0.7068 0.7074" type="mesh" mesh="lidar_1_link_collision_SICK_S300" scale="0.001 0.001 0.001" class="collision" />
+        <geom name="lidar_1_link_visual" pos="0 0 -0.12" quat="0.0006 -0.0006 -0.7068 0.7074" type="mesh" mesh="lidar_1_link_SICK_S300" scale="0.001 0.001 0.001" material="mount_grey" class="visual" />
+      </body>
+      <body name="lidar_2_link" pos="-0.338 -0.288 0.223" quat="-0.0003 -0.3841 0.9233 0.0007">
+        <inertial pos="0 0 0" mass="1.2" diaginertia="0.11042056 0.11042056 0.11042056" />
+        <geom name="lidar_2_link_collision" pos="0 0 -0.12" quat="0.0006 -0.0006 -0.7068 0.7074" type="mesh" mesh="lidar_1_link_collision_SICK_S300" scale="0.001 0.001 0.001" class="collision" />
+        <geom name="lidar_2_link_visual" pos="0 0 -0.12" quat="0.0006 -0.0006 -0.7068 0.7074" type="mesh" mesh="lidar_1_link_SICK_S300" scale="0.001 0.001 0.001" material="mount_grey" class="visual" />
+      </body>
+      <body name="mpo_700_caster_front_left_link" pos="0.24 0.18 0.22">
+        <inertial pos="0 0 0" mass="9.0" diaginertia="0.00044332 0.00044332 0.00072" />
+        <geom name="mpo_700_caster_front_left_link_collision" pos="0 0 0.10" type="mesh" mesh="mpo_700_caster_front_left_link_collision_MPO_700_HEAD" scale="0.001 0.001 0.001" class="collision" />
+        <geom name="mpo_700_caster_front_left_link_visual" pos="0 0 0.10" type="mesh" mesh="mpo_700_caster_front_left_link_MPO_700_HEAD" scale="0.001 0.001 0.001" material="mount_grey" class="visual" />
+        <body name="mpo_700_wheel_front_left_link" pos="0.0 0.045 -0.12">
+          <inertial pos="0 0 0" mass="5.9" diaginertia="0.04 0.02 0.05" />
+          <geom name="mpo_700_wheel_front_left_link_collision" type="mesh" mesh="mpo_700_wheel_front_left_link_collision_MPO_700_WHEEL" scale="0.001 0.001 0.001" class="collision" />
+          <geom name="mpo_700_wheel_front_left_link_visual" type="mesh" mesh="mpo_700_wheel_front_left_link_MPO_700_WHEEL" scale="0.001 0.001 0.001" material="mount_grey" class="visual" />
+        </body>
+      </body>
+      <body name="mpo_700_caster_front_right_link" pos="0.24 -0.18 0.22">
+        <inertial pos="0 0 0." mass="9.0" diaginertia="0.00044332 0.00044332 0.00072" />
+        <geom name="mpo_700_caster_front_right_link_collision" pos="0 0 0.10" type="mesh" mesh="mpo_700_caster_front_left_link_collision_MPO_700_HEAD" scale="0.001 0.001 0.001" class="collision" />
+        <geom name="mpo_700_caster_front_right_link_visual" pos="0 0 0.10" type="mesh" mesh="mpo_700_caster_front_left_link_MPO_700_HEAD" scale="0.001 0.001 0.001" material="mount_grey" class="visual" />
+        <body name="mpo_700_wheel_front_right_link" pos="0.0 -0.045 -0.12" quat="0.0008 0 0 1">
+          <inertial pos="0 0 0" mass="5.9" diaginertia="0.04 0.02 0.05" />
+          <geom name="mpo_700_wheel_front_right_link_collision" type="mesh" mesh="mpo_700_wheel_front_left_link_collision_MPO_700_WHEEL" scale="0.001 0.001 0.001" class="collision" />
+          <geom name="mpo_700_wheel_front_right_link_visual" type="mesh" mesh="mpo_700_wheel_front_left_link_MPO_700_WHEEL" scale="0.001 0.001 0.001" material="mount_grey" class="visual" />
+        </body>
+      </body>
+      <body name="mpo_700_caster_back_left_link" pos="-0.24 0.18 0.22">
+        <inertial pos="0 0 0." mass="9.0" diaginertia="0.00044332 0.00044332 0.00072" />
+        <geom name="mpo_700_caster_back_left_link_collision" pos="0 0 0.10" type="mesh" mesh="mpo_700_caster_front_left_link_collision_MPO_700_HEAD" scale="0.001 0.001 0.001" class="collision" />
+        <geom name="mpo_700_caster_back_left_link_visual" pos="0 0 0.10" type="mesh" mesh="mpo_700_caster_front_left_link_MPO_700_HEAD" scale="0.001 0.001 0.001" material="mount_grey" class="visual" />
+        <body name="mpo_700_wheel_back_left_link" pos="0.0 0.045 -0.12">
+          <inertial pos="0 0 0" mass="5.9" diaginertia="0.04 0.02 0.05" />
+          <geom name="mpo_700_wheel_back_left_link_collision" type="mesh" mesh="mpo_700_wheel_front_left_link_collision_MPO_700_WHEEL" scale="0.001 0.001 0.001" class="collision" />
+          <geom name="mpo_700_wheel_back_left_link_visual" type="mesh" mesh="mpo_700_wheel_front_left_link_MPO_700_WHEEL" scale="0.001 0.001 0.001" material="mount_grey" class="visual" />
+        </body>
+      </body>
+      <body name="mpo_700_caster_back_right_link" pos="-0.24 -0.18 0.22">
+        <inertial pos="0 0 0" mass="9.0" diaginertia="0.00044332 0.00044332 0.00072" />
+        <geom name="mpo_700_caster_back_right_link_collision" pos="0 0 0.10" type="mesh" mesh="mpo_700_caster_front_left_link_collision_MPO_700_HEAD" scale="0.001 0.001 0.001" class="collision" />
+        <geom name="mpo_700_caster_back_right_link_visual" pos="0 0 0.10" type="mesh" mesh="mpo_700_caster_front_left_link_MPO_700_HEAD" scale="0.001 0.001 0.001" material="mount_grey" class="visual" />
+        <body name="mpo_700_wheel_back_right_link" pos="0.0 -0.045 -0.12" quat="0.0008 0 0 1">
+          <inertial pos="0 0 0" mass="5.9" diaginertia="0.04 0.02 0.05" />
+          <geom name="mpo_700_wheel_back_right_link_collision" type="mesh" mesh="mpo_700_wheel_front_left_link_collision_MPO_700_WHEEL" scale="0.001 0.001 0.001" class="collision" />
+          <geom name="mpo_700_wheel_back_right_link_visual" type="mesh" mesh="mpo_700_wheel_front_left_link_MPO_700_WHEEL" scale="0.001 0.001 0.001" material="mount_grey" class="visual" />
+        </body>
+      </body>
+      <body name="cabinet_link" pos="0.072 0 0.35">
+        <inertial pos="0 0 0" quat="0.7071 0 0 -0.7071" mass="10.0" diaginertia="0.457072 0.23616 0.686" />
+        <geom name="cabinet_link_collision" quat="0.7071 0 0 -0.7071" type="mesh" mesh="cabinet_link_collision_cabin" scale="0.001 0.001 0.001" class="collision" />
+        <geom name="cabinet_link_visual" quat="0.7071 0 0 -0.7071" type="mesh" mesh="cabinet_link_cabin" scale="0.001 0.001 0.001" material="mount_grey" class="visual" />
+        <body name="ur5ebase_link" pos="0.133 0.0 0.416" quat="0.7071 0 0 -0.7071">
+          <body name="ur5ebase_link_inertia" quat="0 0 0 1">
+            <inertial pos="0 0 0" mass="4.0" diaginertia="0.00443333156 0.00443333156 0.0072" />
+            <body name="ur5eshoulder_link" pos="0 0 0.1625">
+              <inertial pos="0.0 -0.00193 -0.02561" quat="0.7071 0.7071 0 0" mass="3.761" diaginertia="0.0070021 0.00648091 0.00657286" />
+              <joint name="ur5eshoulder_pan_joint" type="hinge" range="-6.283185307179586 6.283185307179586" axis="0 0 1" />
+              <body name="ur5eupper_arm_link" quat="0.7071 0.7071 0 0">
+                <inertial pos="-0.2125 0.0 0.11336" mass="8.058" diaginertia="0.01505885 0.33388086 0.33247207" />
+                <joint name="ur5eshoulder_lift_joint" type="hinge" range="-6.283185307179586 6.283185307179586" axis="0 0 1" />
+                <body name="ur5eforearm_link" pos="-0.425 0 0">
+                  <inertial pos="-0.2422 0.0 0.0265" mass="2.846" diaginertia="0.00399632 0.07879254 0.0784851" />
+                  <joint name="ur5eelbow_joint" type="hinge" range="-3.141592653589793 3.141592653589793" axis="0 0 1" />
+                  <body name="ur5ewrist_1_link" pos="-0.3922 0 0.1333">
+                    <inertial pos="0.0 -0.01634 -0.0018" quat="0.7071 0.7071 0 0" mass="1.37" diaginertia="0.00165491 0.00135962 0.00126279" />
+                    <joint name="ur5ewrist_1_joint" type="hinge" range="-6.283185307179586 6.283185307179586" axis="0 0 1" />
+                    <body name="ur5ewrist_2_link" pos="0 -0.0997 -2.044881182297852e-11" quat="0.7071 0.7071 0 0">
+                      <inertial pos="0.0 0.01634 -0.0018" quat="0.7071 -0.7071 0 0" mass="1.3" diaginertia="0.00135617 0.00127827 0.00096614" />
+                      <joint name="ur5ewrist_2_joint" type="hinge" range="-6.283185307179586 6.283185307179586" axis="0 0 1" />
+                      <body name="ur5ewrist_3_link" pos="0 0.0996 -2.042830148012698e-11" quat="0.7071 -0.7071 0 0">
+                        <inertial pos="0.0 0.0 -0.001159" mass="0.365" diaginertia="0.00018694 0.00018908 0.00025756" />
+                        <joint name="ur5ewrist_3_joint" type="hinge" range="-6.283185307179586 6.283185307179586" axis="0 0 1" />
+                        <body name="ur5eft_frame" quat="0 1 0 0" />
+                        <body name="ur5eflange" quat="0.5 -0.5 -0.5 -0.5">
+                          <body name="ur5etool0" quat="0.5 0.5 0.5 0.5">
+                            <body name="dummy_end_effector">
+                              <inertial pos="0 0 0.025" mass="0.2" diaginertia="0.0001 0.0001 0.0001" />
+                              <geom name="dummy_end_effector_collision" pos="0 0 0.025" type="cylinder" size="0.04 0.025" class="collision" />
+                              <geom name="dummy_end_effector_visual" pos="0 0 0.025" type="cylinder" size="0.04 0.025" material="mount_grey" class="visual" />
+                              <body name="wrist_d405_mount" pos="0.0 0.0 -0.032" quat="0.7071 0 0 0.7071">
+                                <inertial pos="0 0 0" mass="0.05" diaginertia="0.0001 0.0001 0.0001" />
+                                <geom name="wrist_d405_mount_collision" type="box" size="0.01 0.045 0.0125" class="collision" />
+                                <geom name="wrist_d405_mount_visual" type="mesh" mesh="wrist_d405_mount_UR5_LastJointSensor_D405_Psyonic" scale="0.001 0.001 0.001" material="grey" class="visual" />
+                                <body name="wrist_camera_link" pos="0.079 0.0 0.047" quat="0 0.6088 0 0.7934">
+                                  <inertial pos="0 0 0" mass="0.06" diaginertia="0.0001 0.0001 0.0001" />
+                                  <geom name="wrist_camera_link_collision" type="box" size="0.0125 0.045 0.0115" class="collision" />
+                                  <geom name="wrist_camera_link_visual" pos="0.01 0 0.01" quat="0.7074 0 0.7068 0" type="mesh" mesh="wrist_camera_link_d405" scale="0.001 0.001 0.001" material="grey" class="visual" />
+                                  <body name="wrist_camera_color_frame">
+                                    <body name="wrist_camera_color_optical_frame" quat="0.5 -0.5 0.5 -0.5" />
+                                  </body>
+                                  <body name="wrist_camera_depth_frame">
+                                    <body name="wrist_camera_depth_optical_frame" quat="0.5 -0.5 0.5 -0.5" />
+                                  </body>
+                                </body>
+                              </body>
+                            </body>
+                          </body>
+                        </body>
+                      </body>
+                    </body>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+          <body name="ur5ebase" quat="0 0 0 1" />
+        </body>
+      </body>
+      <body name="pan_tilt_tower_base" pos="-0.15 0 1.1">
+        <inertial pos="0 0 0" mass="1.0" diaginertia="0.05 0.05 0.05" />
+        <geom name="pan_tilt_tower_base_collision" type="box" size="0.015 0.015 0.45" class="collision" />
+        <geom name="pan_tilt_tower_base_visual" type="box" size="0.015 0.015 0.45" material="mount_grey" class="visual" />
+        <body name="pan_tilt_tilt_motor_base_link" pos="0.0 0.0 0.4855" quat="-0.5 -0.5 -0.5 -0.5">
+          <inertial pos="0 0 0" mass="0.05" diaginertia="0.01 0.01 0.01" />
+          <geom name="pan_tilt_tilt_motor_base_link_collision" quat="0.7071 0 0.7071 0" type="mesh" mesh="pan_tilt_tilt_motor_base_link_collision_dynamixel_motor_xl_430_convex_hull" scale="0.001 0.001 0.001" class="collision" />
+          <geom name="pan_tilt_tilt_motor_base_link_visual" quat="0.7071 0 0.7071 0" type="mesh" mesh="pan_tilt_tilt_motor_base_link_dynamixel_motor_xl_430" scale="0.001 0.001 0.001" material="mount_grey" class="visual" />
+          <body name="pan_tilt_tilt_motor_link" quat="0 0 0.0325 0.9995">
+            <inertial pos="0 0 0" mass="0.001" diaginertia="0.01 0.01 0.01" />
+            <joint name="pan_tilt_tilt_motor_joint" type="hinge" range="-3.141592653589793 0.3490658503988659" axis="-1 0 0" />
+            <body name="pan_tilt_tilt_bracket_link" quat="0.7297 0.6838 0 0">
+              <inertial pos="0 0 0" mass="0.05" diaginertia="0.01 0.01 0.01" />
+              <geom name="pan_tilt_tilt_bracket_link_collision" type="mesh" mesh="pan_tilt_tilt_bracket_link_collision_dynamixel_bracket_fr12_h101_convex_hull" scale="0.001 0.001 0.001" class="collision" />
+              <geom name="pan_tilt_tilt_bracket_link_visual" type="mesh" mesh="pan_tilt_tilt_bracket_link_dynamixel_bracket_fr12_h101" scale="0.001 0.001 0.001" material="mount_grey" class="visual" />
+              <body name="pan_tilt_pan_motor_base_link" pos="0 0.0633 0" quat="0.7071 0 0.7071 0">
+                <inertial pos="0 0 0" mass="0.05" diaginertia="0.01 0.01 0.01" />
+                <geom name="pan_tilt_pan_motor_base_link_collision" quat="0.7071 0 0.7071 0" type="mesh" mesh="pan_tilt_tilt_motor_base_link_collision_dynamixel_motor_xl_430_convex_hull" scale="0.001 0.001 0.001" class="collision" />
+                <geom name="pan_tilt_pan_motor_base_link_visual" quat="0.7071 0 0.7071 0" type="mesh" mesh="pan_tilt_tilt_motor_base_link_dynamixel_motor_xl_430" scale="0.001 0.001 0.001" material="mount_grey" class="visual" />
+                <body name="pan_tilt_pan_motor_link" quat="0 0 0.0325 0.9995">
+                  <inertial pos="0 0 0" mass="0.001" diaginertia="0.01 0.01 0.01" />
+                  <joint name="pan_tilt_pan_motor_joint" type="hinge" range="-3.141592653589793 0.3490658503988659" axis="-1 0 0" />
+                  <body name="pan_tilt_pan_bracket_link" quat="0.0325 0.9995 0 0">
+                    <inertial pos="0 0 0" mass="0.05" diaginertia="0.01 0.01 0.01" />
+                    <geom name="pan_tilt_pan_bracket_link_collision" type="mesh" mesh="pan_tilt_tilt_bracket_link_collision_dynamixel_bracket_fr12_h101_convex_hull" scale="0.001 0.001 0.001" class="collision" />
+                    <geom name="pan_tilt_pan_bracket_link_visual" type="mesh" mesh="pan_tilt_tilt_bracket_link_dynamixel_bracket_fr12_h101" scale="0.001 0.001 0.001" material="mount_grey" class="visual" />
+                    <body name="pan_tilt_camera_link" pos="0 0.04 0" quat="0.5 -0.5 0.5 0.5">
+                      <inertial pos="0 0 0" mass="0.1" diaginertia="0.0001 0.0001 0.0001" />
+                      <geom name="pan_tilt_camera_link_collision" type="cylinder" size="0.0305 0.013" class="collision" />
+                      <geom name="pan_tilt_camera_link_visual" type="cylinder" size="0.0305 0.013" material="grey" class="visual" />
+                      <body name="pan_tilt_camera_color_optical_frame" pos="0 0 0.01" quat="0.5004 0.4996 -0.5 0.5" />
+                      <body name="pan_tilt_camera_depth_optical_frame" pos="0 0 0.01" quat="0.5004 0.4996 -0.5 0.5" />
+                    </body>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <freejoint name="floating_base" />
+    </body>
+    <light pos="0 0 2." dir="0 0 -1" directional="true" />
+    <geom name="floor" class="floor" size="0 0 0.05" />
+  </worldbody>
+
+  <asset>
+    <material name="mount_grey" rgba="0.7 0.7 0.7 1" />
+    <material name="grey" rgba="0.5 0.5 0.5 1" />
+    <mesh name="base_link_collision_MPO_700_BODY" file="meshes/steve_simulation/robots/mmo_700/meshes/MPO-700-BODY.dae" />
+    <mesh name="base_link_MPO_700_BODY" file="meshes/steve_simulation/robots/mmo_700/meshes/MPO-700-BODY.dae" />
+    <mesh name="lidar_1_link_collision_SICK_S300" file="meshes/steve_simulation/components/meshes/SICK-S300.dae" />
+    <mesh name="lidar_1_link_SICK_S300" file="meshes/steve_simulation/components/meshes/SICK-S300.dae" />
+    <mesh name="mpo_700_caster_front_left_link_collision_MPO_700_HEAD" file="meshes/steve_simulation/robots/mmo_700/meshes/MPO-700-HEAD.dae" />
+    <mesh name="mpo_700_caster_front_left_link_MPO_700_HEAD" file="meshes/steve_simulation/robots/mmo_700/meshes/MPO-700-HEAD.dae" />
+    <mesh name="mpo_700_wheel_front_left_link_collision_MPO_700_WHEEL" file="meshes/steve_simulation/robots/mmo_700/meshes/MPO-700-WHEEL.dae" />
+    <mesh name="mpo_700_wheel_front_left_link_MPO_700_WHEEL" file="meshes/steve_simulation/robots/mmo_700/meshes/MPO-700-WHEEL.dae" />
+    <mesh name="cabinet_link_collision_cabin" file="meshes/steve_simulation/robots/mmo_700/meshes/cabin.dae" />
+    <mesh name="cabinet_link_cabin" file="meshes/steve_simulation/robots/mmo_700/meshes/cabin.dae" />
+    <mesh name="wrist_d405_mount_UR5_LastJointSensor_D405_Psyonic" file="meshes/steve_simulation/robots/mmo_700/meshes/cameras/d405/UR5_LastJointSensor_D405_Psyonic.STL" />
+    <mesh name="wrist_camera_link_d405" file="meshes/steve_simulation/robots/mmo_700/meshes/cameras/d405/d405.stl" />
+    <mesh name="pan_tilt_tilt_motor_base_link_collision_dynamixel_motor_xl_430_convex_hull" file="meshes/steve_simulation/robots/mmo_700/meshes/cameras/dynamixel/dynamixel_motor_xl-430_convex_hull.dae" />
+    <mesh name="pan_tilt_tilt_motor_base_link_dynamixel_motor_xl_430" file="meshes/steve_simulation/robots/mmo_700/meshes/cameras/dynamixel/dynamixel_motor_xl-430.dae" />
+    <mesh name="pan_tilt_tilt_bracket_link_collision_dynamixel_bracket_fr12_h101_convex_hull" file="meshes/steve_simulation/robots/mmo_700/meshes/cameras/dynamixel/dynamixel_bracket_fr12_h101_convex_hull.dae" />
+    <mesh name="pan_tilt_tilt_bracket_link_dynamixel_bracket_fr12_h101" file="meshes/steve_simulation/robots/mmo_700/meshes/cameras/dynamixel/dynamixel_bracket_fr12_h101.dae" />
+    <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3" markrgb="0.8 0.8 0.8" width="300" height="300" />
+    <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2" />
+    <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072" />
+  </asset>
+
+  <actuator>
+    <motor name="ur5eshoulder_pan_joint" joint="ur5eshoulder_pan_joint" />
+    <motor name="ur5eshoulder_lift_joint" joint="ur5eshoulder_lift_joint" />
+    <motor name="ur5eelbow_joint" joint="ur5eelbow_joint" />
+    <motor name="ur5ewrist_1_joint" joint="ur5ewrist_1_joint" />
+    <motor name="ur5ewrist_2_joint" joint="ur5ewrist_2_joint" />
+    <motor name="ur5ewrist_3_joint" joint="ur5ewrist_3_joint" />
+    <motor name="pan_tilt_tilt_motor_joint" joint="pan_tilt_tilt_motor_joint" />
+    <motor name="pan_tilt_pan_motor_joint" joint="pan_tilt_pan_motor_joint" />
+  </actuator>
+
+  <visual>
+    <rgba haze="0.15 0.25 0.35 1" />
+  </visual>
+</mujoco>

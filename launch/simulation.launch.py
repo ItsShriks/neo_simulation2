@@ -2,6 +2,7 @@
 # Author: Pradheep Padmanabhan
 
 import os
+import subprocess
 
 import launch
 import xacro
@@ -38,6 +39,20 @@ You can launch this file using the following terminal commands:
 """
 
 
+def cleanup_stale_gazebo_processes():
+    """Remove stale Gazebo processes that can block a fresh launch."""
+    for pattern in ["gzserver", "gzclient"]:
+        try:
+            subprocess.run(
+                ["pkill", "-9", "-f", pattern],
+                check=False,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+        except FileNotFoundError:
+            print(f"[WARN] Could not run pkill for {pattern}; it may not be installed")
+
+
 # OpaqueFunction is used to perform setup actions during launch through a Python function
 def launch_setup(
     context: LaunchContext,
@@ -53,6 +68,8 @@ def launch_setup(
     launch_map_server_arg,
     map_arg,
 ):
+    cleanup_stale_gazebo_processes()
+
     # Create a list to hold all the nodes
     launch_actions = []
     # The perform method of a LaunchConfiguration is called to evaluate its value.
