@@ -1,101 +1,95 @@
 #!/usr/bin/env python3
+"""
+MMO-700 Table Approach Scene
+==============================
+Launches the MMO-700 robot in MuJoCo with:
+  - A wooden table placed 2.0 m ahead of the robot
+  - A red box sitting on the table
+  - Wheel velocity actuators driving the robot forward toward the table
+
+Controls (while viewer is open):
+  Space  - pause / resume
+  Esc    - quit
+"""
+import time
 from pathlib import Path
-import tempfile
-
 import mujoco
-import trimesh
 from mujoco import viewer
-
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 MODEL_PATH = SCRIPT_DIR / "mmo_700.xml"
 
+# Wheel actuator indices (0-indexed in actuator list)
+WHEEL_FL = 8
+WHEEL_FR = 9
+WHEEL_BL = 10
+WHEEL_BR = 11
 
-def get_scaled_body_mesh() -> Path:
-    source_mesh = SCRIPT_DIR / "mmo_700" / "meshes" / "MPO-700-BODY.stl"
-    scaled_mesh = SCRIPT_DIR / "mmo_700" / "meshes" / "MPO-700-BODY_scaled.stl"
-    if not scaled_mesh.exists():
-        mesh = trimesh.load_mesh(source_mesh)
-        mesh.apply_scale(0.001)
-        mesh.export(scaled_mesh)
-    return scaled_mesh
+# Approach speed (rad/s) – positive spins wheels forward (+x)
+APPROACH_SPEED = 4.0
 
-
-def build_scene_xml() -> str:
-    mesh_path = get_scaled_body_mesh()
-    xml_text = f"""
-    <mujoco model="mmo_700_scene">
-      <compiler angle="radian" />
-      <option gravity="0 0 -9.81" />
-      <asset>
-        <mesh name="body_mesh" file="{mesh_path}" />
-      </asset>
-      <worldbody>
-        <light pos="0 0 2" dir="0 0 -1" directional="true" />
-        <geom name="floor" type="plane" size="5 5 0.1" rgba="0.6 0.6 0.6 1" />
-
-        <body name="robot_base" pos="0 0 0.15">
-          <freejoint name="robot_free" />
-          <geom type="mesh" mesh="body_mesh" rgba="0.8 0.8 0.8 1" />
-          <body name="cabinet" pos="0.08 0 0.35">
-            <geom type="box" size="0.08 0.12 0.12" rgba="0.25 0.25 0.30 1" />
-          </body>
-          <body name="arm_mount" pos="0.10 0 0.45">
-            <geom type="cylinder" size="0.035 0.06" rgba="0.55 0.55 0.55 1" />
-            <body name="upper_arm" pos="0 0 0.09">
-              <geom type="box" size="0.03 0.03 0.16" rgba="0.45 0.45 0.45 1" />
-            </body>
-            <body name="forearm" pos="0 0 0.24">
-              <geom type="box" size="0.025 0.025 0.12" rgba="0.55 0.55 0.55 1" />
-            </body>
-          </body>
-          <body name="wheel_front_left" pos="0.24 0.18 0.06">
-            <geom type="cylinder" size="0.05 0.04" rgba="0.12 0.12 0.12 1" />
-          </body>
-          <body name="wheel_front_right" pos="0.24 -0.18 0.06">
-            <geom type="cylinder" size="0.05 0.04" rgba="0.12 0.12 0.12 1" />
-          </body>
-          <body name="wheel_back_left" pos="-0.24 0.18 0.06">
-            <geom type="cylinder" size="0.05 0.04" rgba="0.12 0.12 0.12 1" />
-          </body>
-          <body name="wheel_back_right" pos="-0.24 -0.18 0.06">
-            <geom type="cylinder" size="0.05 0.04" rgba="0.12 0.12 0.12 1" />
-          </body>
-        </body>
-
-        <body name="table" pos="0.8 0.0 0.4">
-          <geom type="box" size="0.4 0.6 0.02" rgba="0.5 0.3 0.1 1" />
-          <geom type="box" size="0.03 0.03 0.2" pos="0.3 0.4 0.2" rgba="0.35 0.2 0.1 1" />
-          <geom type="box" size="0.03 0.03 0.2" pos="-0.3 0.4 0.2" rgba="0.35 0.2 0.1 1" />
-          <geom type="box" size="0.03 0.03 0.2" pos="0.3 -0.4 0.2" rgba="0.35 0.2 0.1 1" />
-          <geom type="box" size="0.03 0.03 0.2" pos="-0.3 -0.4 0.2" rgba="0.35 0.2 0.1 1" />
-        </body>
-
-        <body name="static_box" pos="0.7 0.2 0.82">
-          <geom type="box" size="0.08 0.08 0.08" rgba="1 0 0 1" />
-        </body>
-      </worldbody>
-    </mujoco>
-    """
-
-    tmp_fd, tmp_path = tempfile.mkstemp(prefix="mmo_700_scene_", suffix=".xml")
-    Path(tmp_path).write_text(xml_text)
-    return tmp_path
+# Stop when robot front reaches this distance from table front edge
+TABLE_X       = 2.0
+STOP_DISTANCE = 0.65   # stop when robot x >= 1.35 m
 
 
 def main() -> None:
-    scene_xml_path = build_scene_xml()
-    print(f"Loaded scene from {MODEL_PATH}")
-    print(f"Using temporary scene XML: {scene_xml_path}")
-    print("Launching MuJoCo viewer...")
+    print(f"Loading MuJoCo model from: {MODEL_PATH}")
+    model = mujoco.MjModel.from_xml_path(str(MODEL_PATH))
+    data  = mujoco.MjData(model)
 
-    model = mujoco.MjModel.from_xml_path(scene_xml_path)
-    data = mujoco.MjData(model)
+    # Load home keyframe (box on table, arm in home pose, wheels pre-set to approach speed)
+    if model.nkey > 0:
+        mujoco.mj_resetDataKeyframe(model, data, 0)
+        print("  Keyframe 'home' loaded.")
+    else:
+        mujoco.mj_resetData(model, data)
+
+    base_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, "base_link")
+
+    print("\n=== Scene: MMO-700 approaching table with a red box ===")
+    print(f"  Table at x = {TABLE_X:.1f} m   |  Robot starts at x = 0.0 m")
+    print(f"  Wheels set to {APPROACH_SPEED} rad/s forward, stop at x ≈ {TABLE_X - STOP_DISTANCE:.2f} m")
+    print("  Close the viewer window to exit.\n")
+
+    approaching = True
 
     with viewer.launch_passive(model, data) as v:
+        # Position camera: slightly elevated, angled view of the scene
+        v.cam.lookat[:]  = [1.0, 0.0, 0.5]
+        v.cam.distance   = 4.5
+        v.cam.azimuth    = -135
+        v.cam.elevation  = -20
+
         while v.is_running():
+            step_start = time.time()
+
+            # Live wheel control: drive forward until stop threshold
+            mujoco.mj_kinematics(model, data)
+            robot_x = data.xpos[base_id][0]
+
+            if approaching:
+                data.ctrl[WHEEL_FL] = APPROACH_SPEED
+                data.ctrl[WHEEL_FR] = APPROACH_SPEED
+                data.ctrl[WHEEL_BL] = APPROACH_SPEED
+                data.ctrl[WHEEL_BR] = APPROACH_SPEED
+                if robot_x >= TABLE_X - STOP_DISTANCE:
+                    approaching = False
+                    data.ctrl[WHEEL_FL] = 0.0
+                    data.ctrl[WHEEL_FR] = 0.0
+                    data.ctrl[WHEEL_BL] = 0.0
+                    data.ctrl[WHEEL_BR] = 0.0
+                    print(f"  → Robot reached table (x = {robot_x:.3f} m). Wheels stopped.")
+
+            # Step simulation and sync viewer
             mujoco.mj_step(model, data)
             v.sync()
+
+            # Real-time pacing
+            elapsed = time.time() - step_start
+            sleep_t = model.opt.timestep - elapsed
+            if sleep_t > 0:
+                time.sleep(sleep_t)
 
 
 if __name__ == "__main__":
